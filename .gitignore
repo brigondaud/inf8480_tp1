@@ -4,3 +4,9 @@ ResponseTime_Analyzer/.idea/*
 FileSystem/.idea/*
 **.iml
 **~
+
+FileSystem/\.classpath
+
+FileSystem/\.project
+
+FileSystem/\.settings/
