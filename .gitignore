@@ -1,0 +1,5 @@
+ResponseTime_Analyzer/bin/*
+**.jar
+ResponseTime_Analyzer/.idea/*
+**.iml
+**~

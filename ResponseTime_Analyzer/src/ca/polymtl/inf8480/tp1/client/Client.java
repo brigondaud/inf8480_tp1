@@ -11,13 +11,15 @@ import ca.polymtl.inf8480.tp1.shared.ServerInterface;
 public class Client {
 	public static void main(String[] args) {
 		String distantHostname = null;
+		int bytesPower = 1;
 
-		if (args.length > 0) {
+		if (args.length >= 1) {
 			distantHostname = args[0];
+			if (args.length != 1) bytesPower = Integer.parseInt(args[1]);
 		}
 
 		Client client = new Client(distantHostname);
-		client.run();
+		client.run(bytesPower);
 	}
 
 	FakeServer localServer = null; // Pour tester la latence d'un appel de
@@ -40,16 +42,32 @@ public class Client {
 		}
 	}
 
-	private void run() {
-		appelNormal();
+	private void run(int bytesPower) {
+		appelNormal(bytesPower);
 
 		if (localServerStub != null) {
-			appelRMILocal();
+			appelRMILocal(bytesPower);
 		}
 
 		if (distantServerStub != null) {
-			appelRMIDistant();
+			appelRMIDistant(bytesPower);
 		}
+	}
+
+	/**
+	 * Generates a string of size 10**bytesPower bytes. Indeed, a char has a size of 2 bytes. Thus a String of
+	 * length 5 has size 10 bytes. Using this, we can generate values of size 10^x bytes using a string of
+	 * length: 5*10^(powerBytes-1).
+	 * @param bytesPower A power between 1 and 7
+	 * @return The generated string sized 10^x bytes.
+	 */
+	private String generateBytes(int bytesPower) {
+		int charNumber = 5*10^(bytesPower-1);
+		StringBuilder sb = new StringBuilder(charNumber);
+		for (int i = 0; i < charNumber; i++) {
+			sb.append('a');
+		}
+		return sb.toString();
 	}
 
 	private ServerInterface loadServerStub(String hostname) {
@@ -70,9 +88,9 @@ public class Client {
 		return stub;
 	}
 
-	private void appelNormal() {
+	private void appelNormal(int bytesPower) {
 		long start = System.nanoTime();
-		int result = localServer.execute(4, 7);
+		int result = localServer.execute(generateBytes(bytesPower));
 		long end = System.nanoTime();
 
 		System.out.println("Temps écoulé appel normal: " + (end - start)
@@ -80,10 +98,10 @@ public class Client {
 		System.out.println("Résultat appel normal: " + result);
 	}
 
-	private void appelRMILocal() {
+	private void appelRMILocal(int bytesPower) {
 		try {
 			long start = System.nanoTime();
-			int result = localServerStub.execute(4, 7);
+			int result = localServerStub.execute(generateBytes(bytesPower));
 			long end = System.nanoTime();
 
 			System.out.println("Temps écoulé appel RMI local: " + (end - start)
@@ -94,10 +112,10 @@ public class Client {
 		}
 	}
 
-	private void appelRMIDistant() {
+	private void appelRMIDistant(int bytesPower) {
 		try {
 			long start = System.nanoTime();
-			int result = distantServerStub.execute(4, 7);
+			int result = distantServerStub.execute(generateBytes(bytesPower));
 			long end = System.nanoTime();
 
 			System.out.println("Temps écoulé appel RMI distant: "

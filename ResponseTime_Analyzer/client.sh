@@ -8,6 +8,7 @@ cat << EndOfMessage
 HELP: 
 ./client.sh ip_address
 	- remote_server_ip: (OPTIONAL) l'addresse ip du serveur distant
+	- bytes power: puissance pour la taille des parametres generes
 
 EndOfMessage
 
