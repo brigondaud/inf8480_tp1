@@ -55,19 +55,17 @@ public class Client {
 	}
 
 	/**
-	 * Generates a string of size 10**bytesPower bytes. Indeed, a char has a size of 2 bytes. Thus a String of
-	 * length 5 has size 10 bytes. Using this, we can generate values of size 10^x bytes using a string of
-	 * length: 5*10^(powerBytes-1).
-	 * @param bytesPower A power between 1 and 7
-	 * @return The generated string sized 10^x bytes.
+	 * Generates a byte array of size 10^bytesPower.
+	 * @param bytesPower A power between 1 and 7.
+	 * @return A 10^bytesPower sized byte array.
 	 */
-	private String generateBytes(int bytesPower) {
-		int charNumber = 5*10^(bytesPower-1);
-		StringBuilder sb = new StringBuilder(charNumber);
-		for (int i = 0; i < charNumber; i++) {
-			sb.append('a');
+	private byte[] generateBytes(int bytesPower) {
+		int bytesLength = (int) Math.pow(10, bytesPower);
+		byte[] byteArray = new byte[bytesLength];
+		for(int i = 0; i < bytesLength; i++) {
+			byteArray[i] = 80;
 		}
-		return sb.toString();
+		return byteArray;
 	}
 
 	private ServerInterface loadServerStub(String hostname) {
