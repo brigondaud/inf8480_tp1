@@ -8,6 +8,7 @@ import java.util.zip.Checksum;
 /**
  * The file system RMI interface. It contains every operations that can be done
  * with the file server.
+ * 
  * @author Loic Poncet & Baptiste Rigondaud
  *
  */

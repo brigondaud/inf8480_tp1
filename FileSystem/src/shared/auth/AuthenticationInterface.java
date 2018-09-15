@@ -4,7 +4,10 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Created by lopon on 18-09-12.
+ * Interface for the authentication server.
+ * 
+ * @author Loic Poncet & Baptiste Rigondaud
+ *
  */
 public interface AuthenticationInterface extends Remote{
     /**
