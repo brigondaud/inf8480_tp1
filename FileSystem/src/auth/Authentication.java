@@ -2,11 +2,17 @@ package auth;
 
 import shared.auth.AuthenticationInterface;
 
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by lopon on 18-09-12.
+ * The authentication server receives client RMI calls for managing connexions in the system.
+ *
+ * @author Loic Poncet & Baptiste Rigondaud
+ *
  */
 public class Authentication implements AuthenticationInterface {
 
@@ -17,8 +23,13 @@ public class Authentication implements AuthenticationInterface {
     }
 
     @Override
-    public void newUser(String login, String password) {
-
+    public boolean newUser(String login, String password) {
+        if (this.usersEntry.containsKey(login)) {
+            return false;
+        } else {
+            usersEntry.put(login, password);
+            return true;
+        }
     }
 
     @Override
@@ -36,8 +47,14 @@ public class Authentication implements AuthenticationInterface {
             System.setSecurityManager(new SecurityManager());
         }
         try {
+            String name = "Authentication";
+            AuthenticationInterface auth = new Authentication();
+            AuthenticationInterface stub = (AuthenticationInterface)UnicastRemoteObject.exportObject(auth, 0);
+            // TODO Use Open-Stack host rather than localhost by providing an argument in getRegistry method
+            Registry registry = LocateRegistry.getRegistry();
+            registry.rebind(name, stub);
         } catch (Exception e) {
-            System.err.println("ComputeEngine exception:");
+            System.err.println("Authentication exception:");
             e.printStackTrace();
         }
     }
