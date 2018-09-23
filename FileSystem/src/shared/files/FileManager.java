@@ -73,10 +73,11 @@ public class FileManager {
 	/**
 	 * Builds a path with the given file name based on the current
 	 * working directory.
+	 * 
 	 * @param fileName The file for which the path must be built.
-	 * @return
+	 * @return The path to the given file name based on the working directory.
 	 */
-	private String buildFilePath(String fileName) {
+	public String buildFilePath(String fileName) {
 		return this.workingDirectory + System.getProperty("file.separator") + fileName;
 	}
 	
