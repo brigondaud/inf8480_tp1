@@ -2,6 +2,7 @@ package auth;
 
 import shared.auth.AuthenticationInterface;
 
+import java.io.FileOutputStream;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -48,10 +49,10 @@ public class Authentication implements AuthenticationInterface {
         }
         try {
             String name = "Authentication";
+            String hostIp = "132.207.12.87";
             AuthenticationInterface auth = new Authentication();
             AuthenticationInterface stub = (AuthenticationInterface)UnicastRemoteObject.exportObject(auth, 0);
-            // TODO Use Open-Stack host rather than localhost by providing an argument in getRegistry method
-            Registry registry = LocateRegistry.getRegistry();
+            Registry registry = LocateRegistry.getRegistry(hostIp);
             registry.rebind(name, stub);
         } catch (Exception e) {
             System.err.println("Authentication exception:");
