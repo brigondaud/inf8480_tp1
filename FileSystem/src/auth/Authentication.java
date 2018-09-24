@@ -18,10 +18,22 @@ import java.util.Map;
  */
 public class Authentication implements AuthenticationInterface {
 
+    private static final String RECOVERY_FILE_PATH = "/auth/recovery.txt";
+
     private Map<String, String> usersEntry;
 
     public Authentication() {
-        this.usersEntry = new HashMap<String, String>();
+        try {
+            FileManager fileManager = FileManager.getInstance();
+            // We need to check if a recovery file already exists
+            if (fileManager.exists(RECOVERY_FILE_PATH)) {
+                this.usersEntry = fileManager.deserializeMap(RECOVERY_FILE_PATH);
+            } else {
+                this.usersEntry = new HashMap<>();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -32,8 +44,7 @@ public class Authentication implements AuthenticationInterface {
             usersEntry.put(login, password);
             // The entries need to be serialized on every update
             try {
-                // TODO Give a proper file name
-                FileManager.getInstance().serializeMap("TODO", this.usersEntry);
+                FileManager.getInstance().serializeMap(RECOVERY_FILE_PATH, this.usersEntry);
             } catch (IOException ioe) {
                 // TODO Manage the exception
             }

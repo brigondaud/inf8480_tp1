@@ -1,12 +1,10 @@
 package shared.files;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -72,6 +70,16 @@ public class FileManager {
 		File file = new File(buildFilePath(name));
 		return file.createNewFile();
 	}
+
+	/**
+	 * Check if a given file name exists in the current working directory
+	 *
+	 * @param name File's name to check
+	 * @return True if the file exists, False otherwise
+	 */
+	public boolean exists(String name) {
+		return new File(buildFilePath(name)).exists();
+	}
 	
 	/**
 	 * Builds a path with the given file name based on the current
@@ -97,5 +105,21 @@ public class FileManager {
 		oos.close();
 		fos.close();
 	}
-	
+
+	/**
+	 * Deserialize a given file content into a Map
+	 *
+	 * @param fileName File's name to deserialize
+	 * @return The de-serialized Map Object
+	 */
+	public Map<String, String> deserializeMap(String fileName) throws IOException, ClassNotFoundException {
+		FileInputStream fis;
+		fis = new FileInputStream(buildFilePath(fileName));
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		HashMap result = (HashMap) ois.readObject();
+		ois.close();
+		fis.close();
+		return result;
+	}
+
 }
