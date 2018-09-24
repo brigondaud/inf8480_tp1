@@ -1,5 +1,6 @@
 package shared.files;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,15 +27,17 @@ public class FileManager {
 	 */
 	private Path workingDirectory;
 	
-	private FileManager() {
-		
+	private FileManager() throws IOException {
+		// Default working directory: the user working directory.
+		setWorkingDirectory(System.getProperty("user.dir"));
 	}
 	
 	/**
 	 * Singleton: get the instance of the file manager.
+	 * 
 	 * @return
 	 */
-	public static final FileManager getInstance() {
+	public static final FileManager getInstance() throws IOException {
 		if(instance == null) {
 			instance = new FileManager();
 		}
@@ -44,6 +47,7 @@ public class FileManager {
 	/**
 	 * Sets the working directory according to the given path. If the
 	 * directory does not exists, it is created.
+	 * 
 	 * @param path The path to the working directory to set.
 	 * @throws IOException 
 	 */
@@ -56,11 +60,25 @@ public class FileManager {
 	/**
 	 * Creates a file in the working directory given the name. If the file already
 	 * exists, the file is not overwritten.
+	 * 
 	 * @param name File's name to create.
 	 * @return True if the file has successfully been created.
 	 */
-	public boolean create(String name) {
-		return false;
+	public boolean create(String name) throws IOException {
+		
+		File file = new File(buildFilePath(name));
+		return file.createNewFile();
+	}
+	
+	/**
+	 * Builds a path with the given file name based on the current
+	 * working directory.
+	 * 
+	 * @param fileName The file for which the path must be built.
+	 * @return The path to the given file name based on the working directory.
+	 */
+	public String buildFilePath(String fileName) {
+		return this.workingDirectory + System.getProperty("file.separator") + fileName;
 	}
 	
 }

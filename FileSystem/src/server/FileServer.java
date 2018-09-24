@@ -15,8 +15,10 @@ import java.util.zip.Checksum;
 
 import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 
+import shared.auth.AuthenticationInterface;
 import shared.files.FileManager;
 import shared.server.FileServerInterface;
+import shared.server.InvalidCredentialsException;
 
 /**
  * The file server receives client RMI calls for manipulating the files,
@@ -27,7 +29,15 @@ import shared.server.FileServerInterface;
  */
 public class FileServer implements FileServerInterface {
 	
+	/**
+	 * The path to the files stored in the file system.
+	 */
 	private static final String FILE_PATH = "/files";
+	
+	/**
+	 * A remote reference to the authentication server.
+	 */
+	private AuthenticationInterface authenticationServer;
 	
 	public static void main(String[] args) throws IOException {
 		FileServer fs = new FileServer();
@@ -38,41 +48,72 @@ public class FileServer implements FileServerInterface {
 	public FileServer() throws IOException {
 		String execDir = System.getProperty("user.dir");
 		FileManager.getInstance().setWorkingDirectory(execDir + FileServer.FILE_PATH);
+		// Get a reference to the authentication server. TODO
+	}		
+	
+	@Override
+	public boolean create(String[] credentials, String name) throws RemoteException {
+		verifyCredentials(credentials);
+		try {
+			return FileManager.getInstance().create(name);
+		}
+		catch (IOException e) {
+			//TODO
+			return false;
+		}
 	}
 
 	@Override
-	public boolean create(String name) throws RemoteException {
-		return FileManager.getInstance().create(name);
+	public File[] list(String[] credentials) throws RemoteException {
+		verifyCredentials(credentials);
+		// Get files in the working directory.
+		//File[] files FileManager.getInstance().getFiles();
+		//TODO
+		return null;
 	}
 
 	@Override
-	public File[] list() throws RemoteException {
+	public File[] syncLocalDirectory(String[] credentials) throws RemoteException {
+		verifyCredentials(credentials);
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public File[] syncLocalDirectory() throws RemoteException {
+	public File get(String[] credentials, String name, Checksum checksum) throws RemoteException {
+		verifyCredentials(credentials);
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public File get(String name, Checksum checksum) throws RemoteException {
+	public void lock(String[] credentials, String name, Checksum checksum) throws RemoteException {
+		verifyCredentials(credentials);
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
-	public boolean lock(String name, Checksum checksum) throws RemoteException {
+	public void push(String[] credentials, String name, String contenu) throws RemoteException {
+		verifyCredentials(credentials);
 		// TODO Auto-generated method stub
-		return false;
+		
 	}
-
-	@Override
-	public boolean push(String name, String contenu) throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+	
+	/**
+	 * Verifies the client credentials by calling the authentication
+	 * server.
+	 * @param credentials
+	 * @throws InvalidCredentialsException if the authentication failed with
+	 * the provided credentials.
+	 */
+	private void verifyCredentials(String[] credentials) throws InvalidCredentialsException {
+		try {
+			if(!this.authenticationServer.verify(credentials[0], credentials[1]))
+				throw new InvalidCredentialsException(credentials);
+		} catch (RemoteException e) {
+			//TODO
+		}
 	}
 	
 	/**
@@ -98,5 +139,6 @@ public class FileServer implements FileServerInterface {
 			System.err.println("Erreur: " + e.getMessage());
 		}
 	}
+
 
 }
