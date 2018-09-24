@@ -1,5 +1,7 @@
 package shared.server;
 
+import shared.auth.Credentials;
+
 import java.rmi.RemoteException;
 
 /**
@@ -12,7 +14,7 @@ public class InvalidCredentialsException extends RemoteException {
 	
 	private static final String message = "Invalid credentials given: ";
 	
-	public InvalidCredentialsException(String[] credentials) {
+	public InvalidCredentialsException(Credentials credentials) {
 		super(InvalidCredentialsException.message + credentials.toString());
 	}
 

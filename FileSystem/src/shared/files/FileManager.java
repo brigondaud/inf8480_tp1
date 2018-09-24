@@ -1,10 +1,13 @@
 package shared.files;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 /**
  * The FileManager is used to access files, for reading, writing and
@@ -79,6 +82,20 @@ public class FileManager {
 	 */
 	public String buildFilePath(String fileName) {
 		return this.workingDirectory + System.getProperty("file.separator") + fileName;
+	}
+
+	/**
+	 * Serialize a Map Object into a given name file
+	 *
+	 * @param fileName File's name to save Map object
+	 * @param map The Map to save in File fileName
+	 */
+	public void serializeMap(String fileName, Map map) throws IOException {
+		FileOutputStream fos = new FileOutputStream(buildFilePath(fileName));
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		oos.writeObject(map);
+		oos.close();
+		fos.close();
 	}
 	
 }

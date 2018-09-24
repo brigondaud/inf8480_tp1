@@ -16,6 +16,7 @@ import java.util.zip.Checksum;
 import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 
 import shared.auth.AuthenticationInterface;
+import shared.auth.Credentials;
 import shared.files.FileManager;
 import shared.server.FileServerInterface;
 import shared.server.InvalidCredentialsException;
@@ -52,7 +53,7 @@ public class FileServer implements FileServerInterface {
 	}		
 	
 	@Override
-	public boolean create(String[] credentials, String name) throws RemoteException {
+	public boolean create(Credentials credentials, String name) throws RemoteException {
 		verifyCredentials(credentials);
 		try {
 			return FileManager.getInstance().create(name);
@@ -64,7 +65,7 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public File[] list(String[] credentials) throws RemoteException {
+	public File[] list(Credentials credentials) throws RemoteException {
 		verifyCredentials(credentials);
 		// Get files in the working directory.
 		//File[] files FileManager.getInstance().getFiles();
@@ -73,28 +74,28 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public File[] syncLocalDirectory(String[] credentials) throws RemoteException {
+	public File[] syncLocalDirectory(Credentials credentials) throws RemoteException {
 		verifyCredentials(credentials);
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public File get(String[] credentials, String name, Checksum checksum) throws RemoteException {
+	public File get(Credentials credentials, String name, Checksum checksum) throws RemoteException {
 		verifyCredentials(credentials);
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void lock(String[] credentials, String name, Checksum checksum) throws RemoteException {
+	public void lock(Credentials credentials, String name, Checksum checksum) throws RemoteException {
 		verifyCredentials(credentials);
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void push(String[] credentials, String name, String contenu) throws RemoteException {
+	public void push(Credentials credentials, String name, String contenu) throws RemoteException {
 		verifyCredentials(credentials);
 		// TODO Auto-generated method stub
 		
@@ -107,9 +108,9 @@ public class FileServer implements FileServerInterface {
 	 * @throws InvalidCredentialsException if the authentication failed with
 	 * the provided credentials.
 	 */
-	private void verifyCredentials(String[] credentials) throws InvalidCredentialsException {
+	private void verifyCredentials(Credentials credentials) throws InvalidCredentialsException {
 		try {
-			if(!this.authenticationServer.verify(credentials[0], credentials[1]))
+			if(!this.authenticationServer.verify(credentials.getLogin(), credentials.getPassword()))
 				throw new InvalidCredentialsException(credentials);
 		} catch (RemoteException e) {
 			//TODO
@@ -132,7 +133,7 @@ public class FileServer implements FileServerInterface {
 			System.out.println("File server ready.");
 		} catch (ConnectException e) {
 			System.err
-					.println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancé ?");
+					.println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancï¿½ ?");
 			System.err.println();
 			System.err.println("Erreur: " + e.getMessage());
 		} catch (Exception e) {

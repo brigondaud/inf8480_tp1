@@ -1,5 +1,7 @@
 package shared.server;
 
+import shared.auth.Credentials;
+
 import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -24,7 +26,7 @@ public interface FileServerInterface extends Remote {
 	 * @return True on success. False if the file already exists.
 	 * @throws RemoteException
 	 */
-	boolean create(String[] credentials, String name) throws RemoteException;
+	boolean create(Credentials credentials, String name) throws RemoteException;
 	
 	/**
 	 * Returns a list of the files in the file system.
@@ -33,7 +35,7 @@ public interface FileServerInterface extends Remote {
 	 * @return The file list.
 	 * @throws RemoteException
 	 */
-	File[] list(String[] credentials) throws RemoteException;
+	File[] list(Credentials credentials) throws RemoteException;
 	
 	/**
 	 * Pulls all the files and their content from the file system.
@@ -42,7 +44,7 @@ public interface FileServerInterface extends Remote {
 	 * @return
 	 * @throws RemoteException
 	 */
-	File[] syncLocalDirectory(String[] credentials) throws RemoteException;
+	File[] syncLocalDirectory(Credentials credentials) throws RemoteException;
 	
 	/**
 	 * Get the latest version of a file. If the file is already up-to-date 
@@ -54,7 +56,7 @@ public interface FileServerInterface extends Remote {
 	 * @return The file if the client is not up-to-date.
 	 * @throws RemoteException
 	 */
-	File get(String[] credentials, String name,  Checksum checksum) throws RemoteException;
+	File get(Credentials credentials, String name,  Checksum checksum) throws RemoteException;
 	
 	/**
 	 * Asks the server to lock a file. The latest version is given beforehand if
@@ -66,7 +68,7 @@ public interface FileServerInterface extends Remote {
 	 * @return The operation success.
 	 * @throws RemoteException If the file does not exist or if the lock is already given.
 	 */
-	void lock(String[] credentials, String name, Checksum checksum) throws RemoteException;
+	void lock(Credentials credentials, String name, Checksum checksum) throws RemoteException;
 	
 	/**
 	 * Sends a new file version to the file system. The new content replaces the former one
@@ -78,5 +80,5 @@ public interface FileServerInterface extends Remote {
 	 * @return The operation success.
 	 * @throws RemoteException if the file was not locked before the push operation.
 	 */
-	void push(String[] credentials, String name, String contenu) throws RemoteException;
+	void push(Credentials credentials, String name, String contenu) throws RemoteException;
 }

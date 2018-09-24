@@ -1,8 +1,9 @@
 package auth;
 
 import shared.auth.AuthenticationInterface;
+import shared.files.FileManager;
 
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -29,6 +30,13 @@ public class Authentication implements AuthenticationInterface {
             return false;
         } else {
             usersEntry.put(login, password);
+            // The entries need to be serialized on every update
+            try {
+                // TODO Give a proper file name
+                FileManager.getInstance().serializeMap("TODO", this.usersEntry);
+            } catch (IOException ioe) {
+                // TODO Manage the exception
+            }
             return true;
         }
     }
