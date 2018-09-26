@@ -37,7 +37,7 @@ public class ListResponse extends Response {
 		for(String fileName: filesLocked.keySet()) {
 			message.append("* ");
 			message.append(fileName);
-			String user = filesLocked.get(fileName) == null ? "non vérouillé": filesLocked.get(fileName);
+			String user = filesLocked.get(fileName) == null ? "non vÃ©rouillÃ©": filesLocked.get(fileName);
 			message.append(" ");
 			message.append(user);
 		}

@@ -1,17 +1,13 @@
 package shared.files;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.print.attribute.standard.PrinterLocation;
+import org.junit.Test;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests for the different FileManager operations.
@@ -19,16 +15,16 @@ import org.junit.jupiter.api.Test;
  * @author Loic Poncet & Baptiste Rigondaud
  *
  */
-class FileManagerTest {
+public class FileManagerTest {
 	
 	private FileManager fileManager;
-	
+
 	public FileManagerTest() throws IOException {
 		this.fileManager = new FileManager();
 	}
-	
+
 	@Test
-	void createFile() throws IOException {
+	public void createFile() throws IOException {
 		String fileName = "testFile.txt";
 		fileManager.create(fileName);
 		File testFile = new File(fileManager.buildFilePath(fileName));
@@ -37,7 +33,7 @@ class FileManagerTest {
 	}
 	
 	@Test
-	void createDirAndFile() throws IOException {
+	public void createDirAndFile() throws IOException {
 		fileManager.setWorkingDirectory("files");
 		String fileName = "testFile.txt";
 		fileManager.create(fileName);
@@ -47,7 +43,7 @@ class FileManagerTest {
 	}
 
 	@Test
-	void checkExistence() throws IOException {
+	public void checkExistence() throws IOException {
 		String fileName = "testFile.txt";
 		String unexistingFile = "falseFile.txt";
 		fileManager.create(fileName);
@@ -58,7 +54,7 @@ class FileManagerTest {
 	}
 
 	@Test
-	void serializeMap() throws IOException {
+	public void serializeMap() throws IOException {
 		// Create a fake HashMap and fill it with values
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
@@ -72,7 +68,7 @@ class FileManagerTest {
 	}
 
 	@Test
-	void deserializeMap() throws IOException, ClassNotFoundException {
+	public void deserializeMap() throws IOException, ClassNotFoundException {
 		// Create a fake HashMap and fill it with values
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
@@ -89,7 +85,7 @@ class FileManagerTest {
 	}
 
 	@Test
-	void serializeShouldOverwrite() throws IOException, ClassNotFoundException {
+	public void serializeShouldOverwrite() throws IOException, ClassNotFoundException {
 		// Create a fake HashMap and fill it with values
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
@@ -111,7 +107,7 @@ class FileManagerTest {
 	}
 	
 	@Test
-	void testList() throws IOException {
+	public void testList() throws IOException {
 		fileManager.setWorkingDirectory("bin/testFiles");
 		String[] files = {"1", "2", "3"};
 		for(String name: files) {
@@ -126,7 +122,7 @@ class FileManagerTest {
 	}
 	
 	@Test
-	void readTest() {
+	public void readTest() {
 		
 	}
 
