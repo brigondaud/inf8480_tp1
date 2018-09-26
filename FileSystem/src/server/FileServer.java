@@ -12,15 +12,17 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.Checksum;
-
-import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 
 import shared.auth.AuthenticationInterface;
 import shared.auth.Credentials;
 import shared.files.FileManager;
 import shared.server.FileServerInterface;
 import shared.server.InvalidCredentialsException;
+import shared.server.response.CreateResponse;
+import shared.server.response.ListResponse;
 
 /**
  * The file server receives client RMI calls for manipulating the files,
@@ -46,6 +48,11 @@ public class FileServer implements FileServerInterface {
 	 */
 	private FileManager fileManager;
 	
+	/**
+	 * Used to associate the users to files locked.
+	 */
+	private Map<String, Credentials> locks;
+	
 	public static void main(String[] args) throws IOException, NotBoundException {
 		FileServer fs = new FileServer();
 		//TODO: recover the metadata from a possible crash before running the server ?
@@ -64,18 +71,23 @@ public class FileServer implements FileServerInterface {
 		this.fileManager = new FileManager();
 		this.fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileServer.FILE_PATH);
 
+		this.locks = new HashMap<String, Credentials>();
+		//TODO: load an existing saved lock file in case of server crash.
+		
 		//Getting a reference to the authentication server.
 		Registry registry = LocateRegistry.getRegistry("127.0.0.1");
 		this.authenticationServer = (AuthenticationInterface) registry.lookup("Authentication");
 	}		
 	
 	@Override
-	public boolean create(Credentials credentials, String name) throws RemoteException {
+	public synchronized CreateResponse create(Credentials credentials, String name) throws RemoteException {
 		verifyCredentials(credentials);
 		try {
 			if(!fileManager.exists(fileManager.buildFilePath(name)))
-				return fileManager.create(name);
-			return false;
+				if(fileManager.create(name)) {
+					return new CreateResponse(name);
+				}
+			return null;
 		}
 		catch (IOException e) {
 			throw new RemoteException("Cannot create requested file");
@@ -83,9 +95,16 @@ public class FileServer implements FileServerInterface {
 	}
 	
 	@Override
-	public String[] list(Credentials credentials) throws RemoteException {
+	public ListResponse list(Credentials credentials) throws RemoteException {
 		verifyCredentials(credentials);
-		return fileManager.list();
+		String[] fileNames = fileManager.list();
+		ListResponse response = new ListResponse();
+		for(String file: fileNames) {
+			Credentials user = locks.get(file);
+			if(user == null) response.addFile(file, null);
+			else response.addFile(file, user.getLogin());
+		}
+		return response;
 	}
 
 	@Override
