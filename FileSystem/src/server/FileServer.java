@@ -40,6 +40,11 @@ public class FileServer implements FileServerInterface {
 	 */
 	private AuthenticationInterface authenticationServer;
 	
+	/**
+	 * A file manager to handle all the file manipulations.
+	 */
+	private FileManager fileManager;
+	
 	public static void main(String[] args) throws IOException {
 		FileServer fs = new FileServer();
 		//TODO: recover the metadata from a possible crash before running the server ?
@@ -48,7 +53,8 @@ public class FileServer implements FileServerInterface {
 	
 	public FileServer() throws IOException {
 		String execDir = System.getProperty("user.dir");
-		FileManager.getInstance().setWorkingDirectory(execDir + FileServer.FILE_PATH);
+		this.fileManager = new FileManager();
+		this.fileManager.setWorkingDirectory(execDir + FileServer.FILE_PATH);
 		// Get a reference to the authentication server. TODO
 	}		
 	
@@ -56,7 +62,9 @@ public class FileServer implements FileServerInterface {
 	public boolean create(Credentials credentials, String name) throws RemoteException {
 		verifyCredentials(credentials);
 		try {
-			return FileManager.getInstance().create(name);
+			if(!fileManager.exists(fileManager.buildFilePath(name)))
+				return fileManager.create(name);
+			return false;
 		}
 		catch (IOException e) {
 			//TODO
@@ -65,12 +73,9 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public File[] list(Credentials credentials) throws RemoteException {
+	public String[] list(Credentials credentials) throws RemoteException {
 		verifyCredentials(credentials);
-		// Get files in the working directory.
-		//File[] files FileManager.getInstance().getFiles();
-		//TODO
-		return null;
+		return fileManager.list();
 	}
 
 	@Override

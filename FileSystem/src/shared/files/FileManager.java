@@ -7,6 +7,10 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.omg.CORBA.Current;
+
+import shared.auth.Credentials;
+
 /**
  * The FileManager is used to access files, for reading, writing and
  * accessing files properties. All the operations are performed in a working
@@ -18,31 +22,13 @@ import java.util.Map;
 public class FileManager {
 	
 	/**
-	 * Singleton pattern: the file manager can only be accessed through one reference
-	 * to avoid concurrent access to files.
-	 */
-	public static FileManager instance = null;
-	
-	/**
 	 * Used to set the directory on which the file manager will operate.
 	 */
 	private Path workingDirectory;
 	
-	private FileManager() throws IOException {
+	public FileManager() throws IOException {
 		// Default working directory: the user working directory.
 		setWorkingDirectory(System.getProperty("user.dir"));
-	}
-	
-	/**
-	 * Singleton: get the instance of the file manager.
-	 * 
-	 * @return
-	 */
-	public static final FileManager getInstance() throws IOException {
-		if(instance == null) {
-			instance = new FileManager();
-		}
-		return instance;
 	}
 	
 	/**
@@ -69,6 +55,15 @@ public class FileManager {
 		
 		File file = new File(buildFilePath(name));
 		return file.createNewFile();
+	}
+	
+	/**
+	 * Get the list of the files in the current working directory.
+	 * 
+	 * @return A list of file.
+	 */
+	public String[] list() {
+		return new File(workingDirectory.toString()).list();
 	}
 
 	/**

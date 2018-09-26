@@ -35,7 +35,7 @@ public interface FileServerInterface extends Remote {
 	 * @return The file list.
 	 * @throws RemoteException
 	 */
-	File[] list(Credentials credentials) throws RemoteException;
+	String[] list(Credentials credentials) throws RemoteException;
 	
 	/**
 	 * Pulls all the files and their content from the file system.
