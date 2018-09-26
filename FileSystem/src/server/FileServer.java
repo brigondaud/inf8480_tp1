@@ -14,7 +14,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.zip.Checksum;
 
-import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 
 import shared.auth.AuthenticationInterface;
 import shared.auth.Credentials;
@@ -144,7 +143,7 @@ public class FileServer implements FileServerInterface {
 			System.out.println("File server ready.");
 		} catch (ConnectException e) {
 			System.err
-					.println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancé ?");
+					.println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancÃ© ?");
 			System.err.println();
 			System.err.println("Erreur: " + e.getMessage());
 		} catch (Exception e) {

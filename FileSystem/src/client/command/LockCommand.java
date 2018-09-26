@@ -22,6 +22,8 @@ public class LockCommand extends Command {
         if (this.args.length < 3) {
             throw new InvalidArgumentsException(this.args[1]);
         }
-        this.server.lock(this.credentials, this.args[2], null);
+        String fileName = this.args[2];
+        this.server.lock(this.credentials, fileName, null);
     }
+
 }

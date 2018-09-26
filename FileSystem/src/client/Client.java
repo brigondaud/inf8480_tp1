@@ -10,7 +10,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 /**
- * The client manages user commands and send requests to the file server,
+ * The client manages user commands and send requests to the file server
  *
  * @author Loic Poncet & Baptiste Rigondaud
  *
@@ -22,7 +22,7 @@ public class Client {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            Registry registry = LocateRegistry.getRegistry("132.207.12.87");
+            Registry registry = LocateRegistry.getRegistry();
             FileServerInterface fileServer = (FileServerInterface) registry.lookup("server");
             AuthenticationInterface authServer = (AuthenticationInterface) registry.lookup("Authentication");
             // Delegate the Command creation to Command factory

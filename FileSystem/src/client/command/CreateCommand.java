@@ -24,9 +24,9 @@ public class CreateCommand extends Command {
         }
         String fileName = this.args[2];
         if (!this.server.create(this.credentials, fileName)) {
-            System.out.println("Le fichier n'a pas pu être créé.");
+            System.out.println("Could not create the file.");
         } else {
-            System.out.println(fileName + " ajouté.");
+            System.out.println(fileName + " add.");
         }
     }
 }
