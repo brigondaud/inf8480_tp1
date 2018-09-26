@@ -19,21 +19,27 @@ import org.junit.jupiter.api.Test;
  */
 class FileManagerTest {
 	
+	private FileManager fileManager;
+	
+	public FileManagerTest() throws IOException {
+		this.fileManager = new FileManager();
+	}
+	
 	@Test
 	void createFile() throws IOException {
 		String fileName = "testFile.txt";
-		FileManager.getInstance().create(fileName);
-		File testFile = new File(FileManager.getInstance().buildFilePath(fileName));
+		fileManager.create(fileName);
+		File testFile = new File(fileManager.buildFilePath(fileName));
 		assertTrue(testFile.exists());
 		testFile.delete();
 	}
 	
 	@Test
 	void createDirAndFile() throws IOException {
-		FileManager.getInstance().setWorkingDirectory("files");
+		fileManager.setWorkingDirectory("files");
 		String fileName = "testFile.txt";
-		FileManager.getInstance().create(fileName);
-		File testFile = new File(FileManager.getInstance().buildFilePath(fileName));
+		fileManager.create(fileName);
+		File testFile = new File(fileManager.buildFilePath(fileName));
 		assertTrue(testFile.exists());
 		testFile.delete();
 	}
@@ -42,10 +48,10 @@ class FileManagerTest {
 	void checkExistence() throws IOException {
 		String fileName = "testFile.txt";
 		String unexistingFile = "falseFile.txt";
-		FileManager.getInstance().create(fileName);
-		assertTrue(FileManager.getInstance().exists(fileName));
-		assertFalse(FileManager.getInstance().exists(unexistingFile));
-		File testFile = new File(FileManager.getInstance().buildFilePath(fileName));
+		fileManager.create(fileName);
+		assertTrue(fileManager.exists(fileName));
+		assertFalse(fileManager.exists(unexistingFile));
+		File testFile = new File(fileManager.buildFilePath(fileName));
 		testFile.delete();
 	}
 
@@ -55,11 +61,11 @@ class FileManagerTest {
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
 		map.put("b", "beta");
-		FileManager.getInstance().setWorkingDirectory("auth");
+		fileManager.setWorkingDirectory("auth");
 		String fileName = "testFile.map";
-		FileManager.getInstance().serializeMap(fileName, map);
-		assertTrue(FileManager.getInstance().exists(fileName));
-		File testFile = new File(FileManager.getInstance().buildFilePath(fileName));
+		fileManager.serializeMap(fileName, map);
+		assertTrue(fileManager.exists(fileName));
+		File testFile = new File(fileManager.buildFilePath(fileName));
 		testFile.delete();
 	}
 
@@ -69,14 +75,14 @@ class FileManagerTest {
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
 		map.put("b", "beta");
-		FileManager.getInstance().setWorkingDirectory("auth");
+		fileManager.setWorkingDirectory("auth");
 		String fileName = "testFile.map";
-		FileManager.getInstance().serializeMap(fileName, map);
-		Map<String, String> deserializedMap = FileManager.getInstance().deserializeMap(fileName);
+		fileManager.serializeMap(fileName, map);
+		Map<String, String> deserializedMap = fileManager.deserializeMap(fileName);
 		assertEquals(2, deserializedMap.size());
 		assertTrue(deserializedMap.containsKey("a"));
 		assertTrue(deserializedMap.containsValue("beta"));
-		File testFile = new File(FileManager.getInstance().buildFilePath(fileName));
+		File testFile = new File(fileManager.buildFilePath(fileName));
 		testFile.delete();
 	}
 
@@ -88,17 +94,17 @@ class FileManagerTest {
 		map.put("b", "beta");
 		map.put("c", "gamma");
 		map.put("d", "delta");
-		FileManager.getInstance().serializeMap("test.map", map);
+		fileManager.serializeMap("test.map", map);
 		// Create a second map with only 2 values and serialize it in the same file
 		Map<String, String> littleMap = new HashMap<>();
 		littleMap.put("a", "alpha");
 		littleMap.put("b", "beta");
-		FileManager.getInstance().serializeMap("test.map", littleMap);
-		Map<String, String> deserializedMap = FileManager.getInstance().deserializeMap("test.map");
+		fileManager.serializeMap("test.map", littleMap);
+		Map<String, String> deserializedMap = fileManager.deserializeMap("test.map");
 		assertEquals(2, deserializedMap.size());
 		assertTrue(deserializedMap.containsKey("a"));
 		assertTrue(deserializedMap.containsValue("beta"));
-		File testFile = new File(FileManager.getInstance().buildFilePath("test.map"));
+		File testFile = new File(fileManager.buildFilePath("test.map"));
 		testFile.delete();
 	}
 
