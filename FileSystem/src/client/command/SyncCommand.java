@@ -3,6 +3,7 @@ package client.command;
 import shared.auth.Credentials;
 import shared.server.FileServerInterface;
 
+import java.io.File;
 import java.rmi.RemoteException;
 
 public class SyncCommand extends Command {
@@ -18,6 +19,6 @@ public class SyncCommand extends Command {
 
     @Override
     public void execute() throws RemoteException {
-        this.server.syncLocalDirectory(this.credentials);
+        File[] files = this.server.syncLocalDirectory(this.credentials);
     }
 }

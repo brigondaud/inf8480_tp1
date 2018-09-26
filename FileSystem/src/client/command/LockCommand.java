@@ -20,7 +20,7 @@ public class LockCommand extends Command {
     @Override
     public void execute() throws RemoteException, InvalidArgumentsException {
         if (this.args.length < 3) {
-            throw new InvalidArgumentsException();
+            throw new InvalidArgumentsException(this.args[1]);
         }
         this.server.lock(this.credentials, this.args[2], null);
     }

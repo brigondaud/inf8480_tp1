@@ -1,5 +1,10 @@
 package shared.client;
 
 public class InvalidArgumentsException extends Exception {
-    // TODO
+
+    private static final String message = "Invalid arguments given for command: ";
+
+    public InvalidArgumentsException(String commandName) {
+        super(message + commandName);
+    }
 }

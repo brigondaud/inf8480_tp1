@@ -20,8 +20,13 @@ public class CreateCommand extends Command {
     @Override
     public void execute() throws RemoteException, InvalidArgumentsException {
         if (this.args.length < 3) {
-            throw new InvalidArgumentsException();
+            throw new InvalidArgumentsException(this.args[1]);
         }
-        this.server.create(this.credentials, this.args[2]);
+        String fileName = this.args[2];
+        if (!this.server.create(this.credentials, fileName)) {
+            System.out.println("Le fichier n'a pas pu être créé.");
+        } else {
+            System.out.println(fileName + " ajouté.");
+        }
     }
 }

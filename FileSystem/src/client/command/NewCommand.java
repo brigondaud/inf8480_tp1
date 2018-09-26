@@ -17,7 +17,7 @@ public class NewCommand extends Command {
     @Override
     public void execute() throws RemoteException, InvalidArgumentsException {
         if (args.length < 4) {
-            throw new InvalidArgumentsException();
+            throw new InvalidArgumentsException(this.args[1]);
         }
         this.server.newUser(args[2], args[3]);
     }

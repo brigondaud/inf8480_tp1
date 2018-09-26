@@ -20,7 +20,7 @@ public class PushCommand extends Command {
     @Override
     public void execute() throws RemoteException, InvalidArgumentsException {
         if (this.args.length < 4) {
-            throw new InvalidArgumentsException();
+            throw new InvalidArgumentsException(this.args[1]);
         }
         this.server.push(this.credentials, this.args[2], this.args[3]);
     }

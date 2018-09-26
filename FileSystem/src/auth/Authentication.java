@@ -26,7 +26,7 @@ public class Authentication implements AuthenticationInterface {
 
     public Authentication() {
         try {
-            FileManager fileManager = FileManager.getInstance();
+            FileManager fileManager = new FileManager();
             String execDir = System.getProperty("user.dir");
             fileManager.setWorkingDirectory(execDir + RECOVERY_FILE_PATH);
             // We need to check if a recovery file already exists
@@ -49,8 +49,9 @@ public class Authentication implements AuthenticationInterface {
             // The entries need to be serialized on every update
             try {
                 String execDir = System.getProperty("user.dir");
-                FileManager.getInstance().setWorkingDirectory(execDir + RECOVERY_FILE_PATH);
-                FileManager.getInstance().serializeMap(RECOVERY_FILE_NAME, this.usersEntry);
+                FileManager fileManager = new FileManager();
+                fileManager.setWorkingDirectory(execDir + RECOVERY_FILE_PATH);
+                fileManager.serializeMap(RECOVERY_FILE_NAME, this.usersEntry);
             } catch (IOException ioe) {
                 // TODO Manage the exception
             }

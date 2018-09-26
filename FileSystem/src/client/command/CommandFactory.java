@@ -27,13 +27,13 @@ public class CommandFactory {
      */
     public Command createCommand(String[] args) throws InvalidArgumentsException, InvalidCommandException, IOException{
         if (args.length < 2) {
-            throw new InvalidArgumentsException();
+            throw new InvalidArgumentsException(args[0]);
         }
         String commandName = args[1];
-        Credentials credentials = FileManager.getInstance().retrieveUserCredentials("credentials");
+        FileManager fileManager = new FileManager();
+        Credentials credentials = fileManager.retrieveUserCredentials("credentials");
         if (credentials == null && !commandName.equals("new")) {
             // TODO create an other exception for this
-            throw new InvalidArgumentsException();
         }
         // Do the parsing on command name
         switch (commandName) {

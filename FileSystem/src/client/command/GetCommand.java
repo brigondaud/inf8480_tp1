@@ -4,6 +4,7 @@ import shared.client.InvalidArgumentsException;
 import shared.auth.Credentials;
 import shared.server.FileServerInterface;
 
+import java.io.File;
 import java.rmi.RemoteException;
 
 public class GetCommand extends Command {
@@ -20,9 +21,9 @@ public class GetCommand extends Command {
     @Override
     public void execute() throws RemoteException, InvalidArgumentsException {
         if (this.args.length < 3) {
-            throw new InvalidArgumentsException();
+            throw new InvalidArgumentsException(this.args[1]);
         }
-        // TODO
-        this.server.get(this.credentials, this.args[2], null);
+        String fileName = this.args[2];
+        File file = this.server.get(this.credentials, fileName, null);
     }
 }
