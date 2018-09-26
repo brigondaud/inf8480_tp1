@@ -65,6 +65,7 @@ public class FileManager {
 	 * @return A list of file.
 	 */
 	public String[] list() {
+		//TODO: give also the locks !
 		return new File(workingDirectory.toString()).list();
 	}
 

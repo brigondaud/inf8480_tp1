@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.ConnectException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -33,7 +34,7 @@ public class FileServer implements FileServerInterface {
 	/**
 	 * The path to the files stored in the file system.
 	 */
-	private static final String FILE_PATH = "/files";
+	private static final String FILE_PATH = "files";
 	
 	/**
 	 * A remote reference to the authentication server.
@@ -45,17 +46,27 @@ public class FileServer implements FileServerInterface {
 	 */
 	private FileManager fileManager;
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, NotBoundException {
 		FileServer fs = new FileServer();
 		//TODO: recover the metadata from a possible crash before running the server ?
 		fs.run();
 	}
 	
-	public FileServer() throws IOException {
+	/**
+	 * Creates a new file server. It initiates its file manager to work in a specific directory,
+	 * and gets a reference to the authentication interface.
+	 * 
+	 * @throws IOException if the file manager cannot initiate.
+	 * @throws NotBoundException if authentication server is unreachable.
+	 */
+	public FileServer() throws IOException, NotBoundException {
 		String execDir = System.getProperty("user.dir");
 		this.fileManager = new FileManager();
-		this.fileManager.setWorkingDirectory(execDir + FileServer.FILE_PATH);
-		// Get a reference to the authentication server. TODO
+		this.fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileServer.FILE_PATH);
+
+		//Getting a reference to the authentication server.
+		Registry registry = LocateRegistry.getRegistry("127.0.0.1");
+		this.authenticationServer = (AuthenticationInterface) registry.lookup("Authentication");
 	}		
 	
 	@Override
@@ -67,11 +78,10 @@ public class FileServer implements FileServerInterface {
 			return false;
 		}
 		catch (IOException e) {
-			//TODO
-			return false;
+			throw new RemoteException("Cannot create requested file");
 		}
 	}
-
+	
 	@Override
 	public String[] list(Credentials credentials) throws RemoteException {
 		verifyCredentials(credentials);
@@ -113,13 +123,9 @@ public class FileServer implements FileServerInterface {
 	 * @throws InvalidCredentialsException if the authentication failed with
 	 * the provided credentials.
 	 */
-	private void verifyCredentials(Credentials credentials) throws InvalidCredentialsException {
-		try {
-			if(!this.authenticationServer.verify(credentials.getLogin(), credentials.getPassword()))
-				throw new InvalidCredentialsException(credentials);
-		} catch (RemoteException e) {
-			//TODO
-		}
+	private void verifyCredentials(Credentials credentials) throws RemoteException {
+		if(!this.authenticationServer.verify(credentials.getLogin(), credentials.getPassword()))
+			throw new InvalidCredentialsException(credentials);
 	}
 	
 	/**
@@ -138,7 +144,7 @@ public class FileServer implements FileServerInterface {
 			System.out.println("File server ready.");
 		} catch (ConnectException e) {
 			System.err
-					.println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancï¿½ ?");
+					.println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancé ?");
 			System.err.println();
 			System.err.println("Erreur: " + e.getMessage());
 		} catch (Exception e) {
