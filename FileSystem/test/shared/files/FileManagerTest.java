@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.print.attribute.standard.PrinterLocation;
@@ -106,6 +108,21 @@ class FileManagerTest {
 		assertTrue(deserializedMap.containsValue("beta"));
 		File testFile = new File(fileManager.buildFilePath("test.map"));
 		testFile.delete();
+	}
+	
+	@Test
+	void testList() throws IOException {
+		fileManager.setWorkingDirectory("bin/testFiles");
+		String[] files = {"1", "2", "3"};
+		for(String name: files) {
+			fileManager.create(name);
+		}
+		String[] filesFound = fileManager.list();
+		assertArrayEquals(files, filesFound);
+		for(String name: files) {
+			File file = new File(fileManager.buildFilePath(name));
+			file.delete();
+		}
 	}
 
 }
