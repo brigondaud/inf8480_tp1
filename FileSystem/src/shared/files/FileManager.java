@@ -1,5 +1,7 @@
 package shared.files;
 
+import shared.auth.Credentials;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -120,6 +122,29 @@ public class FileManager {
 		ois.close();
 		fis.close();
 		return result;
+	}
+
+	/**
+	 * Retrieve user credentials from a file where they have been stored after a "new" operation
+	 *
+	 * @return The user's credentials, or null if no authentication has been performed or if an exception happened
+	 */
+	public Credentials retrieveUserCredentials(String fileName) throws IOException {
+		try {
+			if (!this.exists(buildFilePath(fileName))) {
+				return null;
+			}
+			FileInputStream fis = new FileInputStream(buildFilePath(fileName));
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Credentials credentials = (Credentials) ois.readObject();
+			ois.close();
+			fis.close();
+			return credentials;
+		} catch (ClassNotFoundException c) {
+			System.err.println("Credentials class not found");
+			c.printStackTrace();
+			return null;
+		}
 	}
 
 }

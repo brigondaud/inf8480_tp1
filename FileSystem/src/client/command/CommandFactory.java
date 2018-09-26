@@ -1,11 +1,22 @@
 package client.command;
 
-import shared.Client.InvalidArgumentsException;
+import shared.client.InvalidArgumentsException;
+import shared.auth.AuthenticationInterface;
+import shared.auth.Credentials;
+import shared.client.InvalidCommandException;
+import shared.files.FileManager;
+import shared.server.FileServerInterface;
+
+import java.io.IOException;
 
 public class CommandFactory {
 
-    public CommandFactory() {
-        super();
+    private FileServerInterface fileServer;
+    private AuthenticationInterface authServer;
+
+    public CommandFactory(FileServerInterface fileServer, AuthenticationInterface auth) {
+        this.fileServer = fileServer;
+        this.authServer = auth;
     }
 
     /**
@@ -14,25 +25,35 @@ public class CommandFactory {
      * @param args The arguments to parse
      * @return A Command object corresponding to user input
      */
-    public Command createCommand(String[] args) throws InvalidArgumentsException {
+    public Command createCommand(String[] args) throws InvalidArgumentsException, InvalidCommandException, IOException{
         if (args.length < 2) {
             throw new InvalidArgumentsException();
         }
         String commandName = args[1];
-        if (commandName.equals("create")) {
-            return new CreateCommand(args);
-        } else if (commandName.equals("list")) {
-            return new ListCommand(args);
-        } else if (commandName.equals("syncLocalDirectory")) {
-            return new SyncCommand(args);
-        } else if (commandName.equals("get")) {
-            return new GetCommand(args);
-        } else if (commandName.equals("lock")) {
-            return new LockCommand(args);
-        } else if (commandName.equals("push")) {
-            return new PushCommand(args);
-        } else {
+        Credentials credentials = FileManager.getInstance().retrieveUserCredentials("credentials");
+        if (credentials == null && !commandName.equals("new")) {
+            // TODO create an other exception for this
             throw new InvalidArgumentsException();
         }
+        // Do the parsing on command name
+        switch (commandName) {
+            case "create":
+                return new CreateCommand(this.fileServer, credentials, args);
+            case "list":
+                return new ListCommand(this.fileServer, credentials, args);
+            case "syncLocalDirectory":
+                return new SyncCommand(this.fileServer, credentials, args);
+            case "get":
+                return new GetCommand(this.fileServer, credentials, args);
+            case "lock":
+                return new LockCommand(this.fileServer, credentials, args);
+            case "push":
+                return new PushCommand(this.fileServer, credentials, args);
+            case "new":
+                return new NewCommand(this.authServer, args);
+            default:
+                throw new InvalidCommandException();
+        }
     }
+
 }

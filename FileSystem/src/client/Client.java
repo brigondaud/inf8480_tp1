@@ -2,7 +2,7 @@ package client;
 
 import client.command.Command;
 import client.command.CommandFactory;
-import shared.auth.Credentials;
+import shared.auth.AuthenticationInterface;
 import shared.server.FileServerInterface;
 
 import java.rmi.RemoteException;
@@ -10,7 +10,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 /**
- * The Client manages user commands and send requests to the file server,
+ * The client manages user commands and send requests to the file server,
  *
  * @author Loic Poncet & Baptiste Rigondaud
  *
@@ -24,15 +24,16 @@ public class Client {
         try {
             Registry registry = LocateRegistry.getRegistry("132.207.12.87");
             FileServerInterface fileServer = (FileServerInterface) registry.lookup("server");
+            AuthenticationInterface authServer = (AuthenticationInterface) registry.lookup("Authentication");
             // Delegate the Command creation to Command factory
-            CommandFactory factory = new CommandFactory();
+            CommandFactory factory = new CommandFactory(fileServer, authServer);
             Command command = factory.createCommand(args);
-            command.execute(fileServer);
+            command.execute();
         } catch (RemoteException e) {
             System.err.println("Remote exception during RMI call: ");
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Client exception: ");
+            System.err.println("client exception: ");
             e.printStackTrace();
         }
     }
