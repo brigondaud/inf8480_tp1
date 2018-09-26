@@ -3,6 +3,7 @@ package client.command;
 import shared.client.InvalidArgumentsException;
 import shared.auth.Credentials;
 import shared.server.FileServerInterface;
+import shared.server.response.Response;
 
 import java.rmi.RemoteException;
 
@@ -18,12 +19,12 @@ public class LockCommand extends Command {
     }
 
     @Override
-    public void execute() throws RemoteException, InvalidArgumentsException {
+    public Response execute() throws RemoteException, InvalidArgumentsException {
         if (this.args.length < 3) {
             throw new InvalidArgumentsException(this.args[1]);
         }
-        String fileName = this.args[2];
-        this.server.lock(this.credentials, fileName, null);
+        this.server.lock(this.credentials, this.args[2], null);
+        return null; //TODO
     }
 
 }

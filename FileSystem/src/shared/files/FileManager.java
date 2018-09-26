@@ -68,6 +68,18 @@ public class FileManager {
 		//TODO: give also the locks !
 		return new File(workingDirectory.toString()).list();
 	}
+	
+	/**
+	 * Reads the file with the given filename.
+	 * 
+	 * @param fileName The file to read.
+	 * @return A byte array corresponding to the file content.
+	 * @throws IOException if the file is not found.
+	 */
+	public byte[] read(String fileName) throws IOException {
+		if(!exists(fileName)) throw new IOException("Cannot read not existing file: " + fileName);
+		return Files.readAllBytes(Paths.get(buildFilePath(fileName)));
+	}
 
 	/**
 	 * Check if a given file name exists in the current working directory

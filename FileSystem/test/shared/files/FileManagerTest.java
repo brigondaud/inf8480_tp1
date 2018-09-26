@@ -124,5 +124,10 @@ class FileManagerTest {
 			file.delete();
 		}
 	}
+	
+	@Test
+	void readTest() {
+		
+	}
 
 }

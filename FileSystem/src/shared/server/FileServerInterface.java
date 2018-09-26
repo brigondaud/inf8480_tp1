@@ -1,6 +1,8 @@
 package shared.server;
 
 import shared.auth.Credentials;
+import shared.server.response.CreateResponse;
+import shared.server.response.ListResponse;
 
 import java.io.File;
 import java.rmi.Remote;
@@ -26,7 +28,7 @@ public interface FileServerInterface extends Remote {
 	 * @return True on success. False if the file already exists.
 	 * @throws RemoteException
 	 */
-	boolean create(Credentials credentials, String name) throws RemoteException;
+	CreateResponse create(Credentials credentials, String name) throws RemoteException;
 	
 	/**
 	 * Returns a list of the files in the file system.
@@ -35,7 +37,7 @@ public interface FileServerInterface extends Remote {
 	 * @return The file list.
 	 * @throws RemoteException
 	 */
-	String[] list(Credentials credentials) throws RemoteException;
+	ListResponse list(Credentials credentials) throws RemoteException;
 	
 	/**
 	 * Pulls all the files and their content from the file system.
