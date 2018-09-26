@@ -4,6 +4,7 @@ import client.command.Command;
 import client.command.CommandFactory;
 import shared.auth.AuthenticationInterface;
 import shared.server.FileServerInterface;
+import shared.server.response.Response;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -28,7 +29,8 @@ public class Client {
             // Delegate the Command creation to Command factory
             CommandFactory factory = new CommandFactory(fileServer, authServer);
             Command command = factory.createCommand(args);
-            command.execute();
+            // Printing the response from the server.
+            System.out.println(command.execute());
         } catch (RemoteException e) {
             System.err.println("Remote exception during RMI call: ");
             e.printStackTrace();

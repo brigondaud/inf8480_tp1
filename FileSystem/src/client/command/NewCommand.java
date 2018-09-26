@@ -1,6 +1,7 @@
 package client.command;
 
 import shared.client.InvalidArgumentsException;
+import shared.server.response.Response;
 import shared.auth.AuthenticationInterface;
 
 import java.rmi.RemoteException;
@@ -15,11 +16,12 @@ public class NewCommand extends Command {
     }
 
     @Override
-    public void execute() throws RemoteException, InvalidArgumentsException {
+    public Response execute() throws RemoteException, InvalidArgumentsException {
         if (args.length < 4) {
             throw new InvalidArgumentsException(this.args[1]);
         }
         this.server.newUser(args[2], args[3]);
+        return null;
     }
 
 }

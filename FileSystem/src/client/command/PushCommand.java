@@ -3,6 +3,7 @@ package client.command;
 import shared.client.InvalidArgumentsException;
 import shared.auth.Credentials;
 import shared.server.FileServerInterface;
+import shared.server.response.Response;
 
 import java.rmi.RemoteException;
 
@@ -18,10 +19,11 @@ public class PushCommand extends Command {
     }
 
     @Override
-    public void execute() throws RemoteException, InvalidArgumentsException {
+    public Response execute() throws RemoteException, InvalidArgumentsException {
         if (this.args.length < 4) {
             throw new InvalidArgumentsException(this.args[1]);
         }
         this.server.push(this.credentials, this.args[2], this.args[3]);
+        return null; //TODO
     }
 }
