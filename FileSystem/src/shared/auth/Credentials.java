@@ -1,9 +1,11 @@
 package shared.auth;
 
+import java.io.Serializable;
+
 /**
  * Simple Class used to easily manipulate users credentials in the system
  */
-public class Credentials {
+public class Credentials implements Serializable {
     private String login;
     private String password;
 

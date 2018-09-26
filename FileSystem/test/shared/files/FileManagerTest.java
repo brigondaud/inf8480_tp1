@@ -56,7 +56,7 @@ class FileManagerTest {
 		map.put("a", "alpha");
 		map.put("b", "beta");
 		FileManager.getInstance().setWorkingDirectory("auth");
-		String fileName = "testFile.txt";
+		String fileName = "testFile.map";
 		FileManager.getInstance().serializeMap(fileName, map);
 		assertTrue(FileManager.getInstance().exists(fileName));
 		File testFile = new File(FileManager.getInstance().buildFilePath(fileName));
@@ -70,13 +70,35 @@ class FileManagerTest {
 		map.put("a", "alpha");
 		map.put("b", "beta");
 		FileManager.getInstance().setWorkingDirectory("auth");
-		String fileName = "testFile.txt";
+		String fileName = "testFile.map";
 		FileManager.getInstance().serializeMap(fileName, map);
 		Map<String, String> deserializedMap = FileManager.getInstance().deserializeMap(fileName);
 		assertEquals(2, deserializedMap.size());
 		assertTrue(deserializedMap.containsKey("a"));
 		assertTrue(deserializedMap.containsValue("beta"));
 		File testFile = new File(FileManager.getInstance().buildFilePath(fileName));
+		testFile.delete();
+	}
+
+	@Test
+	void serializeShouldOverwrite() throws IOException, ClassNotFoundException {
+		// Create a fake HashMap and fill it with values
+		Map<String, String> map = new HashMap<>();
+		map.put("a", "alpha");
+		map.put("b", "beta");
+		map.put("c", "gamma");
+		map.put("d", "delta");
+		FileManager.getInstance().serializeMap("test.map", map);
+		// Create a second map with only 2 values and serialize it in the same file
+		Map<String, String> littleMap = new HashMap<>();
+		littleMap.put("a", "alpha");
+		littleMap.put("b", "beta");
+		FileManager.getInstance().serializeMap("test.map", littleMap);
+		Map<String, String> deserializedMap = FileManager.getInstance().deserializeMap("test.map");
+		assertEquals(2, deserializedMap.size());
+		assertTrue(deserializedMap.containsKey("a"));
+		assertTrue(deserializedMap.containsValue("beta"));
+		File testFile = new File(FileManager.getInstance().buildFilePath("test.map"));
 		testFile.delete();
 	}
 
