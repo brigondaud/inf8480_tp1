@@ -23,6 +23,7 @@ import shared.server.FileServerInterface;
 import shared.server.InvalidCredentialsException;
 import shared.server.response.CreateResponse;
 import shared.server.response.ListResponse;
+import shared.server.response.SyncLocalResponse;
 
 /**
  * The file server receives client RMI calls for manipulating the files,
@@ -108,10 +109,17 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public File[] syncLocalDirectory(Credentials credentials) throws RemoteException {
+	public SyncLocalResponse syncLocalDirectory(Credentials credentials) throws RemoteException {
 		verifyCredentials(credentials);
-		// TODO Auto-generated method stub
-		return null;
+		SyncLocalResponse response = new SyncLocalResponse();
+		for(String file: fileManager.list()) {
+			try {
+				response.addFile(file, fileManager.read(file));
+			} catch (IOException e) {
+				throw new RemoteException("File server read error: unaible to sync the local directory.");
+			}
+		}
+		return response;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package shared.server;
 import shared.auth.Credentials;
 import shared.server.response.CreateResponse;
 import shared.server.response.ListResponse;
+import shared.server.response.SyncLocalResponse;
 
 import java.io.File;
 import java.rmi.Remote;
@@ -46,7 +47,7 @@ public interface FileServerInterface extends Remote {
 	 * @return
 	 * @throws RemoteException
 	 */
-	File[] syncLocalDirectory(Credentials credentials) throws RemoteException;
+	SyncLocalResponse syncLocalDirectory(Credentials credentials) throws RemoteException;
 	
 	/**
 	 * Get the latest version of a file. If the file is already up-to-date 

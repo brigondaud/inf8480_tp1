@@ -23,14 +23,16 @@ public class Client {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            Registry registry = LocateRegistry.getRegistry();
+            
+        	Registry registry = LocateRegistry.getRegistry();
             FileServerInterface fileServer = (FileServerInterface) registry.lookup("server");
             AuthenticationInterface authServer = (AuthenticationInterface) registry.lookup("Authentication");
-            // Delegate the Command creation to Command factory
+            
             CommandFactory factory = new CommandFactory(fileServer, authServer);
             Command command = factory.createCommand(args);
-            // Printing the response from the server.
-            System.out.println(command.execute());
+            Response response = command.execute();
+            System.out.println(response.execute());
+            
         } catch (RemoteException e) {
             System.err.println("Remote exception during RMI call: ");
             e.printStackTrace();
