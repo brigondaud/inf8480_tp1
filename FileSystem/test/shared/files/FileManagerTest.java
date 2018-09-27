@@ -25,6 +25,7 @@ public class FileManagerTest {
 
 	@Test
 	public void createFile() throws IOException {
+		fileManager.setWorkingDirectory("bin/tests/createFile");
 		String fileName = "testFile.txt";
 		fileManager.create(fileName);
 		File testFile = new File(fileManager.buildFilePath(fileName));
@@ -44,6 +45,7 @@ public class FileManagerTest {
 
 	@Test
 	public void checkExistence() throws IOException {
+		fileManager.setWorkingDirectory("bin/tests/checkExistence");
 		String fileName = "testFile.txt";
 		String unexistingFile = "falseFile.txt";
 		fileManager.create(fileName);
@@ -55,6 +57,7 @@ public class FileManagerTest {
 
 	@Test
 	public void serializeMap() throws IOException {
+		fileManager.setWorkingDirectory("bin/tests/serializeMap");
 		// Create a fake HashMap and fill it with values
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
@@ -69,6 +72,7 @@ public class FileManagerTest {
 
 	@Test
 	public void deserializeMap() throws IOException, ClassNotFoundException {
+		fileManager.setWorkingDirectory("bin/tests/deserializeMap");
 		// Create a fake HashMap and fill it with values
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
@@ -86,6 +90,7 @@ public class FileManagerTest {
 
 	@Test
 	public void serializeShouldOverwrite() throws IOException, ClassNotFoundException {
+		fileManager.setWorkingDirectory("bin/tests/serializeShouldOverwrite");
 		// Create a fake HashMap and fill it with values
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
@@ -108,7 +113,7 @@ public class FileManagerTest {
 	
 	@Test
 	public void testList() throws IOException {
-		fileManager.setWorkingDirectory("bin/testFiles");
+		fileManager.setWorkingDirectory("bin/tests/testList");
 		String[] files = {"1", "2", "3"};
 		for(String name: files) {
 			fileManager.create(name);
@@ -122,8 +127,10 @@ public class FileManagerTest {
 	}
 	
 	@Test
-	public void readTest() {
-		
+	public void readTest() throws IOException {
+		fileManager.setWorkingDirectory("bin/tests/readTest");
+		String content = "Read test, should find this content!";
+		//TODO
 	}
 
 }
