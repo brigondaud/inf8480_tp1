@@ -29,7 +29,7 @@ public class GetResponse extends Response {
 
 	@Override
 	public String toString() {
-		return fileName + " synchronisé.";
+		return fileName + " synchronisé";
 	}
 
 }

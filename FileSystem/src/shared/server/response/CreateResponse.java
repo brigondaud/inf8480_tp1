@@ -17,7 +17,7 @@ public class CreateResponse extends Response {
 
 	@Override
 	public String toString() {
-		return "fichier " + this.fileCreated + " ajoutÃ©.";
+		return "fichier " + this.fileCreated + " ajouté";
 	}
 
 }
