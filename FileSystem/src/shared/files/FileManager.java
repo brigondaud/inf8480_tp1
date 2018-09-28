@@ -103,17 +103,27 @@ public class FileManager {
 	}
 
 	/**
-	 * Serialize a Map Object into a given name file
+	 * Serialize an Object into a given name file
 	 *
 	 * @param fileName File's name to save Map object
-	 * @param map The Map to save in File fileName
+	 * @param object The object to serialize in File fileName
 	 */
-	public void serializeMap(String fileName, Map map) throws IOException {
+	public void write(String fileName, Object object) throws IOException {
 		FileOutputStream fos = new FileOutputStream(buildFilePath(fileName));
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		oos.writeObject(map);
+		oos.writeObject(object);
 		oos.close();
 		fos.close();
+	}
+
+	/**
+	 * Serialize a byte array into a given name file
+	 *
+	 * @param fileName File's name to save Map object
+	 * @param array the array to write in File fileName
+	 */
+	public void write(String fileName, byte[] array) throws IOException {
+	    Files.write(Paths.get(buildFilePath(fileName)), array);
 	}
 
 	/**
@@ -127,6 +137,22 @@ public class FileManager {
 		fis = new FileInputStream(buildFilePath(fileName));
 		ObjectInputStream ois = new ObjectInputStream(fis);
 		HashMap result = (HashMap) ois.readObject();
+		ois.close();
+		fis.close();
+		return result;
+	}
+
+	/**
+	 * Deserialize a given file content into a Map
+	 *
+	 * @param fileName File's name to deserialize
+	 * @return The de-serialized Credentials Object
+	 */
+	public Credentials deserializeCredentials(String fileName) throws IOException, ClassNotFoundException {
+		FileInputStream fis;
+		fis = new FileInputStream(buildFilePath(fileName));
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		Credentials result = (Credentials) ois.readObject();
 		ois.close();
 		fis.close();
 		return result;
