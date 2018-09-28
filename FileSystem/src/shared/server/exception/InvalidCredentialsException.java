@@ -1,4 +1,4 @@
-package shared.server;
+package shared.server.exception;
 
 import shared.auth.Credentials;
 

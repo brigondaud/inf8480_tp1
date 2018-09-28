@@ -2,6 +2,7 @@ package shared.server;
 
 import shared.auth.Credentials;
 import shared.server.response.CreateResponse;
+import shared.server.response.GetResponse;
 import shared.server.response.ListResponse;
 import shared.server.response.SyncLocalResponse;
 
@@ -59,7 +60,7 @@ public interface FileServerInterface extends Remote {
 	 * @return The file if the client is not up-to-date.
 	 * @throws RemoteException
 	 */
-	File get(Credentials credentials, String name,  Checksum checksum) throws RemoteException;
+	GetResponse get(Credentials credentials, String name,  Checksum checksum) throws RemoteException;
 	
 	/**
 	 * Asks the server to lock a file. The latest version is given beforehand if

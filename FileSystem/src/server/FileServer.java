@@ -1,7 +1,6 @@
 package server;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,8 +19,10 @@ import shared.auth.AuthenticationInterface;
 import shared.auth.Credentials;
 import shared.files.FileManager;
 import shared.server.FileServerInterface;
-import shared.server.InvalidCredentialsException;
+import shared.server.exception.FileNotFoundException;
+import shared.server.exception.InvalidCredentialsException;
 import shared.server.response.CreateResponse;
+import shared.server.response.GetResponse;
 import shared.server.response.ListResponse;
 import shared.server.response.SyncLocalResponse;
 
@@ -123,14 +124,17 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public File get(Credentials credentials, String name, Checksum checksum) throws RemoteException {
+	public GetResponse get(Credentials credentials, String name, Checksum checksum) throws RemoteException {
 		verifyCredentials(credentials);
-		// TODO Auto-generated method stub
-		return null;
+		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
+		// Check if file not updated.
+		if(checksum != null && fileManager.checksum(name) == checksum) return null;
+		// At this point the file must be sent in any case.
+		return new GetResponse(name, fileManager.read(name));
 	}
 
 	@Override
-	public void lock(Credentials credentials, String name, Checksum checksum) throws RemoteException {
+	public synchronized void lock(Credentials credentials, String name, Checksum checksum) throws RemoteException {
 		verifyCredentials(credentials);
 		// TODO Auto-generated method stub
 		
