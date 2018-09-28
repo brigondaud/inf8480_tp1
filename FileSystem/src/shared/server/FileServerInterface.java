@@ -8,7 +8,6 @@ import shared.server.response.LockResponse;
 import shared.server.response.PushResponse;
 import shared.server.response.SyncLocalResponse;
 
-import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.zip.Checksum;

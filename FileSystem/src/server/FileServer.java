@@ -1,10 +1,6 @@
 package server;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -130,9 +126,13 @@ public class FileServer implements FileServerInterface {
 		verifyCredentials(credentials);
 		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
 		// Check if file not updated.
-		if(checksum != null && fileManager.checksum(name) == checksum) return null;
+		if(checksum != null && fileManager.checksum(name).equals(checksum)) return null;
 		// At this point the file must be sent in any case.
-		return new GetResponse(name, fileManager.read(name));
+		try {
+			return new GetResponse(name, fileManager.read(name));
+		} catch (IOException e) {
+			throw new RemoteException("Cannot read the requested file.");
+		}
 	}
 
 	@Override
@@ -143,7 +143,11 @@ public class FileServer implements FileServerInterface {
 		if(locks.containsKey(name)) return new LockResponse(name, false, locks.get(name).getLogin(), content);
 		locks.put(name, credentials);
 		if(checksum != null && fileManager.checksum(name) != checksum)
-			content = fileManager.read(name);
+			try {
+				content = fileManager.read(name);
+			} catch (IOException e) {
+				throw new RemoteException("Cannot read the requested file.");
+			}
 		return new LockResponse(name, true, credentials.getLogin(), content);
 	}
 

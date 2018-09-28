@@ -6,8 +6,10 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.Checksum;
 
 import org.omg.CORBA.Current;
 
@@ -100,6 +102,24 @@ public class FileManager {
 	 */
 	public String buildFilePath(String fileName) {
 		return this.workingDirectory + System.getProperty("file.separator") + fileName;
+	}
+	
+	/**
+	 * Computes the MD5 checksum of the given file.
+	 * 
+	 * @param fileName The file to compute the checksum on.
+	 * @return MD5 checksum.
+	 * @throws IOException 
+	 * @throws NoSuchAlgorithmException 
+	 */
+	public Checksum checksum(String fileName) {
+		try {
+			return new MD5Checksum(read(fileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return null;
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.Checksum;
 
 import org.junit.Test;
 
@@ -132,5 +133,4 @@ public class FileManagerTest {
 		String content = "Read test, should find this content!";
 		//TODO
 	}
-
 }
