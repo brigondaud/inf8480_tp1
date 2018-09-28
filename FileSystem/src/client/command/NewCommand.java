@@ -1,5 +1,6 @@
 package client.command;
 
+import client.Client;
 import shared.client.InvalidArgumentsException;
 import shared.server.response.Response;
 import shared.auth.AuthenticationInterface;
@@ -18,7 +19,7 @@ public class NewCommand extends Command {
     @Override
     public Response execute() throws RemoteException, InvalidArgumentsException {
         if (args.length < 4) {
-            throw new InvalidArgumentsException(this.args[1]);
+            throw new InvalidArgumentsException(this.args[Client.commandIndex]);
         }
         this.server.newUser(args[2], args[3]);
         return null;

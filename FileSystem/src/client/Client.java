@@ -3,6 +3,7 @@ package client;
 import client.command.Command;
 import client.command.CommandFactory;
 import shared.auth.AuthenticationInterface;
+import shared.client.InvalidCommandException;
 import shared.server.FileServerInterface;
 import shared.server.response.Response;
 
@@ -18,13 +19,16 @@ import java.rmi.registry.Registry;
  */
 public class Client {
 
+    public static final int commandIndex = 1;
+
     public static void main(String args[]) {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            
-        	Registry registry = LocateRegistry.getRegistry();
+            String hostName = args[0];
+            System.out.println(hostName);
+        	Registry registry = LocateRegistry.getRegistry(hostName);
             FileServerInterface fileServer = (FileServerInterface) registry.lookup("server");
             AuthenticationInterface authServer = (AuthenticationInterface) registry.lookup("Authentication");
             
@@ -36,10 +40,16 @@ public class Client {
         } catch (RemoteException e) {
             System.err.println("Remote exception during RMI call: ");
             e.printStackTrace();
+        } catch (InvalidCommandException icException) {
+            printHelp();
         } catch (Exception e) {
             System.err.println("client exception: ");
             e.printStackTrace();
         }
+    }
+
+    static private void printHelp() {
+        System.out.println("./client.sh [--ip=remote_server_ip] command_name");
     }
 
 }
