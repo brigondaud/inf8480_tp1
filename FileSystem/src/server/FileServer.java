@@ -1,7 +1,6 @@
 package server;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,9 +19,13 @@ import shared.auth.AuthenticationInterface;
 import shared.auth.Credentials;
 import shared.files.FileManager;
 import shared.server.FileServerInterface;
-import shared.server.InvalidCredentialsException;
+import shared.server.exception.FileNotFoundException;
+import shared.server.exception.InvalidCredentialsException;
 import shared.server.response.CreateResponse;
+import shared.server.response.GetResponse;
 import shared.server.response.ListResponse;
+import shared.server.response.LockResponse;
+import shared.server.response.PushResponse;
 import shared.server.response.SyncLocalResponse;
 
 /**
@@ -109,7 +112,7 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public SyncLocalResponse syncLocalDirectory(Credentials credentials) throws RemoteException {
+	public synchronized SyncLocalResponse syncLocalDirectory(Credentials credentials) throws RemoteException {
 		verifyCredentials(credentials);
 		SyncLocalResponse response = new SyncLocalResponse();
 		for(String file: fileManager.list()) {
@@ -123,24 +126,37 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public File get(Credentials credentials, String name, Checksum checksum) throws RemoteException {
+	public synchronized GetResponse get(Credentials credentials, String name, Checksum checksum) throws RemoteException {
 		verifyCredentials(credentials);
-		// TODO Auto-generated method stub
-		return null;
+		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
+		// Check if file not updated.
+		if(checksum != null && fileManager.checksum(name) == checksum) return null;
+		// At this point the file must be sent in any case.
+		return new GetResponse(name, fileManager.read(name));
 	}
 
 	@Override
-	public void lock(Credentials credentials, String name, Checksum checksum) throws RemoteException {
+	public synchronized LockResponse lock(Credentials credentials, String name, Checksum checksum) throws RemoteException {
 		verifyCredentials(credentials);
-		// TODO Auto-generated method stub
-		
+		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
+		byte[] content = null;
+		if(locks.containsKey(name)) return new LockResponse(name, false, locks.get(name).getLogin(), content);
+		locks.put(name, credentials);
+		if(checksum != null && fileManager.checksum(name) != checksum)
+			content = fileManager.read(name);
+		return new LockResponse(name, true, credentials.getLogin(), content);
 	}
 
 	@Override
-	public void push(Credentials credentials, String name, String contenu) throws RemoteException {
+	public PushResponse push(Credentials credentials, String name, String contenu) throws RemoteException {
 		verifyCredentials(credentials);
-		// TODO Auto-generated method stub
-		
+		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
+		if(!locks.get(name).equals(credentials))
+			return new PushResponse(name, false);
+		//TODO: write the file
+		// Release the lock.
+		locks.remove(name);
+		return new PushResponse(name, true);
 	}
 	
 	/**
