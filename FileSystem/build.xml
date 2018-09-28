@@ -7,7 +7,7 @@
     <property name="build.dir" value="bin"/>
 	<property name="classes.dir" value="${build.dir}/classes"/>
 	<property name="test.build.dir" value="${build.dir}/test" />
-	<property name="jar.dir" value="${build.dir}/jar"/>
+	<property name="jar.dir" value="."/>
 
 	<path id="FileSystem.classpath">
 		<pathelement location="${classes.dir}" />
@@ -27,6 +27,10 @@
 
 	<target name="clean">
 		<delete dir="${build.dir}" />
+        <delete file="shared.jar" />
+        <delete file="file_server.jar" />
+        <delete file="client.jar" />
+        <delete file="auth.jar" />
 	</target>
 
 	<target depends="init" name="compile">
@@ -47,8 +51,9 @@
 	<target depends="test-compile" name="build-jar">
 		<mkdir dir="${jar.dir}" />
 		<jar destfile="${jar.dir}/shared.jar" basedir="${classes.dir}" includes="shared/**" update="false" />
-		<jar destfile="${jar.dir}/server.jar" basedir="${classes.dir}" includes="server/**" update="false" />
+		<jar destfile="${jar.dir}/file_server.jar" basedir="${classes.dir}" includes="server/**" update="false" />
 		<jar destfile="${jar.dir}/client.jar" basedir="${classes.dir}" includes="client/**" update="false" />
+		<jar destfile="${jar.dir}/auth.jar" basedir="${classes.dir}" includes="auth/**" update="false" />
 	</target>
 
 	<target depends="build-jar" name="test">

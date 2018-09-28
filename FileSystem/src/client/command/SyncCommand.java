@@ -20,7 +20,7 @@ public class SyncCommand extends Command {
 
     @Override
     public Response execute() throws RemoteException {
-        File[] files = this.server.syncLocalDirectory(this.credentials);
+        this.server.syncLocalDirectory(this.credentials);
         return null; //TODO
     }
 }

@@ -77,9 +77,11 @@ public class Authentication implements AuthenticationInterface {
             String name = "Authentication";
             String hostIp = "132.207.12.87";
             AuthenticationInterface auth = new Authentication();
-            AuthenticationInterface stub = (AuthenticationInterface)UnicastRemoteObject.exportObject(auth, 0);
-            Registry registry = LocateRegistry.getRegistry(hostIp);
+            AuthenticationInterface stub =
+                    (AuthenticationInterface) UnicastRemoteObject.exportObject(auth, 0);
+            Registry registry = LocateRegistry.getRegistry();
             registry.rebind(name, stub);
+            System.out.println("Authentication server is ready");
         } catch (Exception e) {
             System.err.println("Authentication exception:");
             e.printStackTrace();
