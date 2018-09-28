@@ -1,5 +1,6 @@
 package client.command;
 
+import client.Client;
 import shared.client.InvalidArgumentsException;
 import shared.auth.AuthenticationInterface;
 import shared.auth.Credentials;
@@ -27,9 +28,10 @@ public class CommandFactory {
      */
     public Command createCommand(String[] args) throws InvalidArgumentsException, InvalidCommandException, IOException{
         if (args.length < 2) {
-            throw new InvalidArgumentsException(args[0]);
+            throw new InvalidCommandException();
         }
-        String commandName = args[1];
+        System.out.println("Command name : " + args[Client.commandIndex]);
+        String commandName = args[Client.commandIndex];
         FileManager fileManager = new FileManager();
         Credentials credentials = fileManager.retrieveUserCredentials("credentials");
         if (credentials == null && !commandName.equals("new")) {

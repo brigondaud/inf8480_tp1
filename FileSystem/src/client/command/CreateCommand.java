@@ -1,5 +1,6 @@
 package client.command;
 
+import client.Client;
 import shared.client.InvalidArgumentsException;
 import shared.auth.Credentials;
 import shared.server.FileServerInterface;
@@ -22,7 +23,7 @@ public class CreateCommand extends Command {
     @Override
     public Response execute() throws RemoteException, InvalidArgumentsException {
         if (this.args.length < 3) {
-            throw new InvalidArgumentsException(this.args[1]);
+            throw new InvalidArgumentsException(this.args[Client.commandIndex]);
         }
         String fileName = this.args[2];
         return this.server.create(this.credentials, fileName);
