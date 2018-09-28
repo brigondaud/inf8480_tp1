@@ -26,7 +26,6 @@ public class GetCommand extends Command {
             throw new InvalidArgumentsException(this.args[Client.commandIndex]);
         }
         String fileName = this.args[2];
-        File file = this.server.get(this.credentials, fileName, null);
-        return null; //TODO
+        return this.server.get(this.credentials, fileName, null);
     }
 }
