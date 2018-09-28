@@ -43,7 +43,7 @@ public class SyncLocalResponse extends Response {
 
 	@Override
 	public String toString() {
-		return "Fichiers synchronisés avec le serveur";
+		return "Fichiers synchronisÃ©s avec le serveur";
 	}
 
 }

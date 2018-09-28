@@ -51,7 +51,7 @@ public class Authentication implements AuthenticationInterface {
                 String execDir = System.getProperty("user.dir");
                 FileManager fileManager = new FileManager();
                 fileManager.setWorkingDirectory(execDir + RECOVERY_FILE_PATH);
-                fileManager.serializeMap(RECOVERY_FILE_NAME, this.usersEntry);
+                fileManager.write(RECOVERY_FILE_NAME, this.usersEntry);
             } catch (IOException ioe) {
                 // TODO Manage the exception
             }

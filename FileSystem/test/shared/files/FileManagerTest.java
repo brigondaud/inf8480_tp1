@@ -2,11 +2,14 @@ package shared.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.Checksum;
 
 import org.junit.Test;
+import shared.auth.Credentials;
 
 import static org.junit.Assert.*;
 
@@ -58,29 +61,50 @@ public class FileManagerTest {
 
 	@Test
 	public void serializeMap() throws IOException {
-		fileManager.setWorkingDirectory("bin/tests/serializeMap");
+		fileManager.setWorkingDirectory("bin/tests/serialize");
 		// Create a fake HashMap and fill it with values
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
 		map.put("b", "beta");
-		fileManager.setWorkingDirectory("auth");
 		String fileName = "testFile.map";
-		fileManager.serializeMap(fileName, map);
+		fileManager.write(fileName, map);
 		assertTrue(fileManager.exists(fileName));
 		File testFile = new File(fileManager.buildFilePath(fileName));
 		testFile.delete();
 	}
 
 	@Test
-	public void deserializeMap() throws IOException, ClassNotFoundException {
-		fileManager.setWorkingDirectory("bin/tests/deserializeMap");
+	public void serializeCredentials() throws IOException {
+		fileManager.setWorkingDirectory("bin/tests/serialize");
+		String fileName = "testFile.credentials";
+		Credentials testCredentials = new Credentials("loginTest", "passwordTest");
+		fileManager.write(fileName, testCredentials);
+		assertTrue(fileManager.exists(fileName));
+		File testFile = new File(fileManager.buildFilePath(fileName));
+		testFile.delete();
+	}
+
+	@Test
+	public void write() throws IOException {
+		byte[] testBytes = { 65, 66, 67, 68, 69};
+		fileManager.setWorkingDirectory("bin/tests/serialize");
+		String fileName = "testFile.bytes";
+		fileManager.write(fileName, testBytes);
+		byte[] writtenBytes = Files.readAllBytes(Paths.get(fileManager.buildFilePath(fileName)));
+		assertArrayEquals(testBytes, writtenBytes);
+		File testFile = new File(fileManager.buildFilePath(fileName));
+		testFile.delete();
+	}
+
+	@Test
+	public void deserialize() throws IOException, ClassNotFoundException {
+		fileManager.setWorkingDirectory("bin/tests/deserialize");
 		// Create a fake HashMap and fill it with values
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "alpha");
 		map.put("b", "beta");
-		fileManager.setWorkingDirectory("auth");
 		String fileName = "testFile.map";
-		fileManager.serializeMap(fileName, map);
+		fileManager.write(fileName, map);
 		Map<String, String> deserializedMap = fileManager.deserializeMap(fileName);
 		assertEquals(2, deserializedMap.size());
 		assertTrue(deserializedMap.containsKey("a"));
@@ -98,12 +122,12 @@ public class FileManagerTest {
 		map.put("b", "beta");
 		map.put("c", "gamma");
 		map.put("d", "delta");
-		fileManager.serializeMap("test.map", map);
+		fileManager.write("test.map", map);
 		// Create a second map with only 2 values and serialize it in the same file
 		Map<String, String> littleMap = new HashMap<>();
 		littleMap.put("a", "alpha");
 		littleMap.put("b", "beta");
-		fileManager.serializeMap("test.map", littleMap);
+		fileManager.write("test.map", littleMap);
 		Map<String, String> deserializedMap = fileManager.deserializeMap("test.map");
 		assertEquals(2, deserializedMap.size());
 		assertTrue(deserializedMap.containsKey("a"));

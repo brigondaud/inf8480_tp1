@@ -3,6 +3,7 @@ package client.command;
 import shared.client.InvalidArgumentsException;
 import shared.server.response.Response;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 /**
@@ -17,6 +18,6 @@ public abstract class Command {
         this.args = args;
     }
 
-    public abstract Response execute() throws RemoteException, InvalidArgumentsException;
+    public abstract Response execute() throws RemoteException, InvalidArgumentsException, IOException;
 
 }

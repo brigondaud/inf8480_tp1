@@ -36,7 +36,6 @@ public class Client {
             Command command = factory.createCommand(args);
             Response response = command.execute();
             System.out.println(response.execute());
-            
         } catch (RemoteException e) {
             System.err.println("Remote exception during RMI call: ");
             e.printStackTrace();

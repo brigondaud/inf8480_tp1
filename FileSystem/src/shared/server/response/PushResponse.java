@@ -25,8 +25,8 @@ public class PushResponse extends Response {
 
 	@Override
 	public String toString() {
-		if(success) return fileName + "a été envoyé au serveur.";
-		return "Opération refusée, vous devez d'abord vérouiller le fichier";
+		if(success) return fileName + "a Ã©tÃ© envoyÃ© au serveur.";
+		return "OpÃ©ration refusÃ©e, vous devez d'abord vÃ©rouiller le fichier";
 	}
 
 }
