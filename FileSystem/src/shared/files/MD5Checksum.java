@@ -2,7 +2,6 @@ package shared.files;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.zip.Checksum;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -15,12 +14,12 @@ import shared.auth.Credentials;
  * @author Loic Poncet & Baptiste Rigondaud
  *
  */
-public class MD5Checksum implements Checksum {
+public class MD5Checksum {
 	
 	/**
 	 * Checksum's value.
 	 */
-	private long value;
+	private String value;
 	
 	/**
 	 * The MD5 checksum is computed thanks to a byte array.
@@ -32,47 +31,27 @@ public class MD5Checksum implements Checksum {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			md.update(input);
 			byte[] digest = md.digest();
-			this.value = DatatypeConverter.parseLong(DatatypeConverter.printHexBinary(digest));
+			this.value = DatatypeConverter.printHexBinary(digest);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
 	}
-
-	@Override
-	public long getValue() {
+	
+	/**
+	 * Getter for MD5Checksum's value.
+	 * 
+	 * @return MD5Checksum's value.
+	 */
+	public String getValue() {
 		return this.value;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null) return false;
-		if(!(obj instanceof Checksum)) return false;
-		return value == ((Checksum)obj).getValue();
-	}
-	
-	/**
-	 * Code smell: Not implemented since not needed.
-	 */
-	@Override
-	public void reset() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Code smell: Not implemented since not needed.
-	 */
-	@Override
-	public void update(int b) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Code smell: Not implemented since not needed.
-	 */
-	@Override
-	public void update(byte[] b, int off, int len) {
-		throw new UnsupportedOperationException();
+		if(!(obj instanceof MD5Checksum)) return false;
+		return value.equals(((MD5Checksum)obj).getValue());
 	}
 
 }

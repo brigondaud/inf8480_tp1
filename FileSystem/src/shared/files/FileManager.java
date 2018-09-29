@@ -9,11 +9,6 @@ import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.Checksum;
-
-import org.omg.CORBA.Current;
-
-import shared.auth.Credentials;
 
 /**
  * The FileManager is used to access files, for reading, writing and
@@ -112,7 +107,7 @@ public class FileManager {
 	 * @throws IOException 
 	 * @throws NoSuchAlgorithmException 
 	 */
-	public Checksum checksum(String fileName) {
+	public MD5Checksum checksum(String fileName) {
 		try {
 			return new MD5Checksum(read(fileName));
 		} catch (IOException e) {

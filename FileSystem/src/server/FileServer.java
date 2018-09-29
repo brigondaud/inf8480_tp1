@@ -9,11 +9,11 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.Checksum;
 
 import shared.auth.AuthenticationInterface;
 import shared.auth.Credentials;
 import shared.files.FileManager;
+import shared.files.MD5Checksum;
 import shared.server.FileServerInterface;
 import shared.server.exception.FileNotFoundException;
 import shared.server.exception.InvalidCredentialsException;
@@ -122,7 +122,7 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public synchronized GetResponse get(Credentials credentials, String name, Checksum checksum) throws RemoteException {
+	public synchronized GetResponse get(Credentials credentials, String name, MD5Checksum checksum) throws RemoteException {
 		verifyCredentials(credentials);
 		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
 		// Check if file not updated.
@@ -136,7 +136,7 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public synchronized LockResponse lock(Credentials credentials, String name, Checksum checksum) throws RemoteException {
+	public synchronized LockResponse lock(Credentials credentials, String name, MD5Checksum checksum) throws RemoteException {
 		verifyCredentials(credentials);
 		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
 		byte[] content = null;

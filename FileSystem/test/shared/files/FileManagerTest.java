@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.Checksum;
 
 import org.junit.Test;
 import shared.auth.Credentials;

@@ -1,6 +1,7 @@
 package shared.server;
 
 import shared.auth.Credentials;
+import shared.files.MD5Checksum;
 import shared.server.response.CreateResponse;
 import shared.server.response.GetResponse;
 import shared.server.response.ListResponse;
@@ -10,7 +11,6 @@ import shared.server.response.SyncLocalResponse;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.zip.Checksum;
 
 /**
  * The file system RMI interface. It contains every operations that can be done
@@ -61,7 +61,7 @@ public interface FileServerInterface extends Remote {
 	 * @return The file if the client is not up-to-date.
 	 * @throws RemoteException
 	 */
-	public GetResponse get(Credentials credentials, String name,  Checksum checksum) throws RemoteException;
+	public GetResponse get(Credentials credentials, String name,  MD5Checksum checksum) throws RemoteException;
 	
 	/**
 	 * Asks the server to lock a file. The latest version is given beforehand if
@@ -73,7 +73,7 @@ public interface FileServerInterface extends Remote {
 	 * @return The operation success.
 	 * @throws RemoteException If the file does not exist or if the lock is already given.
 	 */
-	public LockResponse lock(Credentials credentials, String name, Checksum checksum) throws RemoteException;
+	public LockResponse lock(Credentials credentials, String name, MD5Checksum checksum) throws RemoteException;
 	
 	/**
 	 * Sends a new file version to the file system. The new content replaces the former one
