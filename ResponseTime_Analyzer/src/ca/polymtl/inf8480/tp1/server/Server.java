@@ -46,7 +46,7 @@ public class Server implements ServerInterface {
 	 * paramètre.
 	 */
 	@Override
-	public int execute(String param) throws RemoteException {
+	public int execute(byte[] param) throws RemoteException {
 		return 0;
 	}
 }
