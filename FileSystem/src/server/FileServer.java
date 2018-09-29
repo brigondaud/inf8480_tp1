@@ -55,7 +55,6 @@ public class FileServer implements FileServerInterface {
 	
 	public static void main(String[] args) throws IOException, NotBoundException {
 		FileServer fs = new FileServer();
-		//TODO: recover the metadata from a possible crash before running the server ?
 		fs.run();
 	}
 	
@@ -146,19 +145,27 @@ public class FileServer implements FileServerInterface {
 			try {
 				content = fileManager.read(name);
 			} catch (IOException e) {
+				// Removes the lock in case of reading error.
+				locks.remove(name);
 				throw new RemoteException("Cannot read the requested file.");
 			}
 		return new LockResponse(name, true, credentials.getLogin(), content);
 	}
 
 	@Override
-	public PushResponse push(Credentials credentials, String name, String contenu) throws RemoteException {
+	public PushResponse push(Credentials credentials, String name, String content) throws RemoteException {
 		verifyCredentials(credentials);
 		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
 		if(!locks.get(name).equals(credentials))
 			return new PushResponse(name, false);
-		//TODO: write the file
-		// Release the lock.
+		try {
+			fileManager.write(name, content);
+		} catch (IOException e) {
+			// Releases the lock in case of writing error.
+			locks.remove(name);
+			throw new RemoteException("Unable to write the provided file.");
+		}
+		// Releases the lock.
 		locks.remove(name);
 		return new PushResponse(name, true);
 	}

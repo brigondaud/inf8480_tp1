@@ -81,9 +81,9 @@ public interface FileServerInterface extends Remote {
 	 * 
 	 * @param credentials The user credentials.
 	 * @param name The file name.
-	 * @param contenu The new file content.
+	 * @param content The new file content.
 	 * @return The operation success.
 	 * @throws RemoteException if the file was not locked before the push operation.
 	 */
-	public PushResponse push(Credentials credentials, String name, String contenu) throws RemoteException;
+	public PushResponse push(Credentials credentials, String name, String content) throws RemoteException;
 }

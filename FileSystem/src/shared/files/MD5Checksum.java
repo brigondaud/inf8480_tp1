@@ -1,5 +1,6 @@
 package shared.files;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -14,8 +15,8 @@ import shared.auth.Credentials;
  * @author Loic Poncet & Baptiste Rigondaud
  *
  */
-public class MD5Checksum {
-	
+public class MD5Checksum implements Serializable {
+
 	/**
 	 * Checksum's value.
 	 */
