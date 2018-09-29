@@ -1,9 +1,11 @@
 package shared.files;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+
+import shared.files.MD5Checksum;
+
 /**
  * Unit test on the MD5Checksum class.
  * 
@@ -19,8 +21,8 @@ public class MD5ChecksumTest {
 		MD5Checksum c1 = new MD5Checksum(input1);
 		MD5Checksum c2 = new MD5Checksum(input1);
 		MD5Checksum c3 = new MD5Checksum(input2);
-		assertEquals(c1, c2);
-		assertNotEquals(c1, c3);
+		assertTrue(c1.equals(c2));
+		assertFalse(c1.equals(c3));
 	}
 
 

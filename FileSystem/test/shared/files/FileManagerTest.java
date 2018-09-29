@@ -2,6 +2,7 @@ package shared.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -154,6 +155,22 @@ public class FileManagerTest {
 	public void readTest() throws IOException {
 		fileManager.setWorkingDirectory("bin/tests/readTest");
 		String content = "Read test, should find this content!";
-		//TODO
+		String fileName = "test.read";
+		fileManager.write(fileName, content);
+		String read = new String(fileManager.read(fileName));
+		assertEquals(content, read);
+	}
+	
+	@Test
+	public void checksumTest() throws IOException {
+		fileManager.setWorkingDirectory("bin/tests/checksumTest");
+		String content1 = "checksum1";
+		String content2 = "checksum2";
+		String[] files = {"a", "b", "c"};
+		fileManager.write(files[0], content1);
+		fileManager.write(files[1], content1);
+		fileManager.write(files[2], content2);
+		assertTrue(fileManager.checksum(files[0]).equals(fileManager.checksum(files[1])));
+		assertFalse(fileManager.checksum(files[0]).equals(fileManager.checksum(files[2])));
 	}
 }

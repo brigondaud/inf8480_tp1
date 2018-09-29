@@ -140,6 +140,17 @@ public class FileManager {
 	public void write(String fileName, byte[] array) throws IOException {
 	    Files.write(Paths.get(buildFilePath(fileName)), array);
 	}
+	
+	/**
+	 * Write a file with its content in the current working directory.
+	 * 
+	 * @param fileName The file to write in.
+	 * @param content The file content to write.
+	 * @throws IOException
+	 */
+	public void write(String fileName, String content) throws IOException {
+		this.write(fileName, content.getBytes());
+	}
 
 	/**
 	 * Deserialize a given file content into a Map
