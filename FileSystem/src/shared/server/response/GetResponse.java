@@ -29,6 +29,7 @@ public class GetResponse extends Response {
 	 */
 	@Override
 	protected void onReception() {
+		if(content == null) return;
 		try {
 			this.fileManager.write(fileName, content);
 		} catch (IOException e) {
@@ -39,6 +40,7 @@ public class GetResponse extends Response {
 
 	@Override
 	public String toString() {
+		if(content == null) return "Le fichier est déjà à jour";
 		return fileName + " synchronisé";
 	}
 

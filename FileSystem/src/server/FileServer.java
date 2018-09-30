@@ -15,13 +15,14 @@ import shared.auth.Credentials;
 import shared.files.FileManager;
 import shared.files.MD5Checksum;
 import shared.server.FileServerInterface;
-import shared.server.exception.FileNotFoundException;
-import shared.server.exception.InvalidCredentialsException;
+import shared.server.response.BadCredentialsResponse;
 import shared.server.response.CreateResponse;
 import shared.server.response.GetResponse;
 import shared.server.response.ListResponse;
 import shared.server.response.LockResponse;
+import shared.server.response.NotExistingFileResponse;
 import shared.server.response.PushResponse;
+import shared.server.response.Response;
 import shared.server.response.SyncLocalResponse;
 
 /**
@@ -74,8 +75,8 @@ public class FileServer implements FileServerInterface {
 	}		
 	
 	@Override
-	public synchronized CreateResponse create(Credentials credentials, String name) throws RemoteException {
-		verifyCredentials(credentials);
+	public synchronized Response create(Credentials credentials, String name) throws RemoteException {
+		if(!verifyCredentials(credentials)) return new BadCredentialsResponse();
 		try {
 			if(!fileManager.exists(fileManager.buildFilePath(name)))
 				if(fileManager.create(name)) {
@@ -89,8 +90,8 @@ public class FileServer implements FileServerInterface {
 	}
 	
 	@Override
-	public ListResponse list(Credentials credentials) throws RemoteException {
-		verifyCredentials(credentials);
+	public Response list(Credentials credentials) throws RemoteException {
+		if(!verifyCredentials(credentials)) return new BadCredentialsResponse();
 		String[] fileNames = fileManager.list();
 		ListResponse response = new ListResponse();
 		for(String file: fileNames) {
@@ -102,8 +103,8 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public synchronized SyncLocalResponse syncLocalDirectory(Credentials credentials) throws RemoteException {
-		verifyCredentials(credentials);
+	public synchronized Response syncLocalDirectory(Credentials credentials) throws RemoteException {
+		if(!verifyCredentials(credentials)) return new BadCredentialsResponse();
 		SyncLocalResponse response = new SyncLocalResponse();
 		for(String file: fileManager.list()) {
 			try {
@@ -116,11 +117,11 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public synchronized GetResponse get(Credentials credentials, String name, MD5Checksum checksum) throws RemoteException {
-		verifyCredentials(credentials);
-		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
+	public synchronized Response get(Credentials credentials, String name, MD5Checksum checksum) throws RemoteException {
+		if(!verifyCredentials(credentials)) return new BadCredentialsResponse();
+		if(!fileManager.exists(name)) return new NotExistingFileResponse();
 		// Check if file not updated.
-		if(checksum != null && fileManager.checksum(name).equals(checksum)) return null;
+		if(checksum != null && fileManager.checksum(name).equals(checksum)) return new GetResponse(name, null);
 		// At this point the file must be sent in any case.
 		try {
 			return new GetResponse(name, fileManager.read(name));
@@ -130,9 +131,9 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public synchronized LockResponse lock(Credentials credentials, String name, MD5Checksum checksum) throws RemoteException {
-		verifyCredentials(credentials);
-		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
+	public synchronized Response lock(Credentials credentials, String name, MD5Checksum checksum) throws RemoteException {
+		if(!verifyCredentials(credentials)) return new BadCredentialsResponse();
+		if(!fileManager.exists(name)) return new NotExistingFileResponse();
 		byte[] content = null;
 		if(locks.containsKey(name)) return new LockResponse(name, false, locks.get(name).getLogin(), content);
 		locks.put(name, credentials);
@@ -148,9 +149,9 @@ public class FileServer implements FileServerInterface {
 	}
 
 	@Override
-	public PushResponse push(Credentials credentials, String name, String content) throws RemoteException {
-		verifyCredentials(credentials);
-		if(!fileManager.exists(name)) throw new FileNotFoundException(name);
+	public Response push(Credentials credentials, String name, String content) throws RemoteException {
+		if(!verifyCredentials(credentials)) return new BadCredentialsResponse();
+		if(!fileManager.exists(name)) return new NotExistingFileResponse();
 		if(!locks.get(name).equals(credentials))
 			return new PushResponse(name, false);
 		try {
@@ -169,13 +170,13 @@ public class FileServer implements FileServerInterface {
 	 * Verifies the client credentials by calling the authentication
 	 * server.
 	 * @param credentials
+	 * @throws RemoteException 
 	 * @throws InvalidCredentialsException if the authentication failed with
 	 * the provided credentials.
 	 */
-	private void verifyCredentials(Credentials credentials) throws RemoteException {
-		if(credentials == null) throw new InvalidCredentialsException();
-		if(!this.authenticationServer.verify(credentials.getLogin(), credentials.getPassword()))
-			throw new InvalidCredentialsException(credentials);
+	private boolean verifyCredentials(Credentials credentials) throws RemoteException {
+		if(credentials == null) return false;
+		return this.authenticationServer.verify(credentials.getLogin(), credentials.getPassword());
 	}
 	
 	/**
