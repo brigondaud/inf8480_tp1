@@ -20,9 +20,9 @@ public class NewResponse extends Response {
     @Override
     public void onReception(FileManager fileManager) {
         if (this.success) {
-            String execDir = System.getProperty("user.dir");
             try {
-                fileManager.setWorkingDirectory(execDir);
+            	// The file manager does not operate in the client file system here.
+                fileManager.setWorkingDirectory(System.getProperty("user.dir"));
                 // The entries need to be serialized on every update
                 fileManager.write(".credentials", credentials);
             } catch (IOException ioException) {

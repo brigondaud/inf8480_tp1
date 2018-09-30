@@ -26,8 +26,9 @@ public class PushCommand extends Command {
         if (this.args.length < 3) {
             throw new InvalidArgumentsException(this.args[Client.commandIndex]);
         }
-        FileManager fileManager = new FileManager();
         String fileName = this.args[2];
+        FileManager fileManager = FileManager.createClientManager();
+        if(!fileManager.exists(fileName)) throw new InvalidArgumentsException(fileName);
         String fileContent = new String(fileManager.read(fileName));
         return this.server.push(this.credentials, fileName, fileContent);
     }

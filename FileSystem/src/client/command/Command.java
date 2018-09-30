@@ -1,8 +1,10 @@
 package client.command;
 
 import shared.client.InvalidArgumentsException;
+import shared.files.FileManager;
 import shared.server.response.Response;
 
+import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 

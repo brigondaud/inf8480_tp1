@@ -62,9 +62,7 @@ public class FileServer implements FileServerInterface {
 	 * @throws NotBoundException if authentication server is unreachable.
 	 */
 	public FileServer() throws IOException, NotBoundException {
-		String execDir = System.getProperty("user.dir");
-		this.fileManager = new FileManager();
-		this.fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileManager.SERVER_FILES_PATH);
+		this.fileManager = FileManager.createServerManager();
 
 		this.locks = new HashMap<String, Credentials>();
 		//TODO: load an existing saved lock file in case of server crash.

@@ -216,5 +216,45 @@ public class FileManager {
 			return null;
 		}
 	}
+	
+	/**
+	 * Creates a file manager ready to operate on the client side file system.
+	 * 
+	 * @return A client side file manager.
+	 */
+	public static FileManager createClientManager() {
+		try {
+			FileManager fm = new FileManager();
+			fm.setWorkingDirectory(System.getProperty("user.dir") 
+					+ System.getProperty("file.separator") 
+					+ FileManager.CLIENT_FILES_PATH);
+			return fm;
+		} catch (IOException e) {
+			System.err.println("Cannot create client ready file manager.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return null;
+	}
+	
+	/**
+	 * Creates a file manager ready to operate on the server side file system.
+	 * 
+	 * @return A server side file manager.
+	 */
+	public static FileManager createServerManager() {
+		try {
+			FileManager fm = new FileManager();
+			fm.setWorkingDirectory(System.getProperty("user.dir") 
+					+ System.getProperty("file.separator") 
+					+ FileManager.SERVER_FILES_PATH);
+			return fm;
+		} catch (IOException e) {
+			System.err.println("Cannot create server ready file manager.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return null;
+	}
 
 }

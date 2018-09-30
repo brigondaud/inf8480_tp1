@@ -19,17 +19,11 @@ public abstract class Response implements Serializable {
 	/**
 	 * A response is executed at its reception for possible client side
 	 * actions and displaying the results.
+	 * 
+	 * @param fileManager A client side ready file manager.
 	 * @return
 	 */
 	public String execute(FileManager fileManager) {
-		// Set the working directory to match the client's one.
-		String execDir = System.getProperty("user.dir");
-		try {
-			fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileManager.CLIENT_FILES_PATH);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
 		this.onReception(fileManager);
 		return this.toString();
 	}
@@ -37,6 +31,8 @@ public abstract class Response implements Serializable {
 	/**
 	 * The actions that must be performed on reception.
 	 * Does nothing by default.
+	 * 
+	 * @param fileManager A client side ready file manager.
 	 */
 	protected void onReception(FileManager fileManager) {
 		// Does nothing by default
