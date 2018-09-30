@@ -42,6 +42,7 @@ public class ListResponse extends Response {
 			String user = filesLocked.get(fileName) == null ? "non vérouillé": filesLocked.get(fileName);
 			message.append(" ");
 			message.append(user);
+			message.append("\n");
 		}
 		return message.toString();
 	}
