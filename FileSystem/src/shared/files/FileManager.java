@@ -201,7 +201,7 @@ public class FileManager {
 	 */
 	public Credentials retrieveUserCredentials(String fileName) throws IOException {
 		try {
-			if (!this.exists(buildFilePath(fileName))) {
+			if (!this.exists(fileName)) {
 				return null;
 			}
 			FileInputStream fis = new FileInputStream(buildFilePath(fileName));

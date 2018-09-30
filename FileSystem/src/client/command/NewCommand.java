@@ -26,7 +26,6 @@ public class NewCommand extends Command {
         }
         Credentials credentials = new Credentials(args[2], args[3]);
         FileManager fileManager = new FileManager();
-        fileManager.setWorkingDirectory(".");
         fileManager.write(".credentials", credentials);
         return this.server.newUser(credentials.getLogin(), credentials.getPassword());
     }

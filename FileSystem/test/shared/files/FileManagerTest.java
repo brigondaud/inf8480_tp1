@@ -179,4 +179,14 @@ public class FileManagerTest {
 		assertTrue(fileManager.checksum(files[0]).equals(fileManager.checksum(files[1])));
 		assertFalse(fileManager.checksum(files[0]).equals(fileManager.checksum(files[2])));
 	}
+
+	@Test
+	public void writeAndReadCredentialsTest() throws IOException {
+		fileManager.setWorkingDirectory("bin/tests/writeAndReadCredentialsTest");
+		Credentials cred = new Credentials("toto", "titi");
+		String credFile = "credentials";
+		fileManager.write(credFile, cred);
+		Credentials credRead = fileManager.retrieveUserCredentials(credFile);
+		assertEquals(cred, credRead);
+	}
 }
