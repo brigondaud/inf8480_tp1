@@ -30,8 +30,7 @@ public class GetResponse extends Response {
 	@Override
 	protected void onReception() {
 		try {
-			FileManager fm = new FileManager();
-			fm.write(fileName, content);
+			this.fileManager.write(fileName, content);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);

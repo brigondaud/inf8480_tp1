@@ -1,5 +1,6 @@
 package shared.server.response;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,10 +37,18 @@ public class SyncLocalResponse extends Response {
 	
 	/**
 	 * Overrides every file locally.
+	 * @throws  
 	 */
 	@Override
 	protected void onReception() {
-		// TODO
+		for(String file: files.keySet()) {
+			try {
+				this.fileManager.write(file, files.get(file));
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+		}
 	}
 
 	@Override

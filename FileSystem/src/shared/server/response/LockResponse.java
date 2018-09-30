@@ -62,7 +62,12 @@ public class LockResponse extends Response {
 		// If the returned content is not null, then the file
 		// is out-of-date: need to write the provided content.
 		if(content == null) return;
-		//TODO
+		try {
+			this.fileManager.write(fileName, content);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	/**
