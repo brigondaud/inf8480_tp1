@@ -3,6 +3,7 @@ package client;
 import client.command.Command;
 import client.command.CommandFactory;
 import shared.auth.AuthenticationInterface;
+import shared.client.InvalidArgumentsException;
 import shared.client.InvalidCommandException;
 import shared.files.FileManager;
 import shared.server.FileServerInterface;
@@ -45,6 +46,9 @@ public class Client {
         } catch (InvalidCommandException icException) {
             printHelp();
             System.exit(1);
+        } catch (InvalidArgumentsException e) {
+        	System.err.println(e.getMessage());
+        	System.exit(1);
         } catch (IOException ioException) {
             System.err.println("I/O exception during RMI call");
             ioException.printStackTrace();
