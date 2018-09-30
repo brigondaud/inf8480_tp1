@@ -155,7 +155,7 @@ public class FileServer implements FileServerInterface {
 		if(locks.containsKey(name)) return new LockResponse(name, false, locks.get(name).getLogin(), content);
 		locks.put(name, credentials);
 		saveMetadata();
-		if(checksum != null && fileManager.checksum(name) != checksum)
+		if(checksum == null || fileManager.checksum(name) != checksum)
 			try {
 				content = fileManager.read(name);
 			} catch (IOException e) {
