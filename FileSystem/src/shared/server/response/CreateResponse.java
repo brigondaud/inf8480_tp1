@@ -20,7 +20,7 @@ public class CreateResponse extends Response {
 
 	@Override
 	public String toString() {
-		if(!success) return "Le fichier " + fileCreated + " existe dÈj‡";
+		if(!success) return "Le fichier " + fileCreated + " existe d√©j√†";
 		return "fichier " + this.fileCreated + " ajout√©";
 	}
 
