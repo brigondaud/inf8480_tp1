@@ -34,7 +34,9 @@ public class Authentication implements AuthenticationInterface {
                 this.usersEntry = new HashMap<>();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+        	// Use empty credentials set in case of failure.
+        	this.usersEntry = new HashMap<>();
+        	System.err.println("Cannot retrieve server metadata, creating empty lock set.");
         }
     }
 

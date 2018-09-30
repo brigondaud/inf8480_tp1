@@ -195,6 +195,31 @@ public class FileManager {
 		fis.close();
 		return result;
 	}
+	
+	/**
+	 * Retrieves file server metadata.
+	 *
+	 * @param fileName File's name to deserialize
+	 * @return The de-serialized Map Object
+	 */
+	public Map<String, Credentials> retrieveServerLocks(String fileName) throws IOException {
+		FileInputStream fis;
+		fis = new FileInputStream(buildFilePath(fileName));
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		HashMap<String, Credentials> result;
+		try {
+			result = (HashMap<String, Credentials>) ois.readObject();
+		} catch (ClassNotFoundException c) {
+			System.err.println("Locks hashmap type not found");
+			c.printStackTrace();
+			ois.close();
+			fis.close();
+			return null;
+		}
+		ois.close();
+		fis.close();
+		return result;
+	}
 
 	/**
 	 * Retrieve user credentials from a file where they have been stored after a "new" operation

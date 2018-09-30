@@ -35,6 +35,12 @@ import shared.server.response.SyncLocalResponse;
 public class FileServer implements FileServerInterface {
 	
 	/**
+	 * The path to the server metadata file. It must be used out of
+	 * the server file system.
+	 */
+	private static final String METADATA_FILE = "server.metadata";
+	
+	/**
 	 * A remote reference to the authentication server.
 	 */
 	private AuthenticationInterface authenticationServer;
@@ -64,8 +70,21 @@ public class FileServer implements FileServerInterface {
 	public FileServer() throws IOException, NotBoundException {
 		this.fileManager = FileManager.createServerManager();
 
-		this.locks = new HashMap<String, Credentials>();
-		//TODO: load an existing saved lock file in case of server crash.
+		try {
+			// File manager pointing out of file system for metadata recovery.
+			FileManager fm = new FileManager();
+			if(fm.exists(METADATA_FILE)) {
+				this.locks = fm.retrieveServerLocks(METADATA_FILE);
+				// In case of read error.
+				if(this.locks == null) this.locks = new HashMap<String, Credentials>();
+			}
+			else
+				this.locks = new HashMap<String, Credentials>();
+		} catch (IOException e) {
+			// Use new locks in case of lock recovery failure.
+			System.err.println("Cannot retrieve past server metadata, creating empty lock set.");
+			this.locks = new HashMap<String, Credentials>();
+		}
 		
 		//Getting a reference to the authentication server.
 		Registry registry = LocateRegistry.getRegistry("127.0.0.1");
@@ -135,12 +154,14 @@ public class FileServer implements FileServerInterface {
 		byte[] content = null;
 		if(locks.containsKey(name)) return new LockResponse(name, false, locks.get(name).getLogin(), content);
 		locks.put(name, credentials);
+		saveMetadata();
 		if(checksum != null && fileManager.checksum(name) != checksum)
 			try {
 				content = fileManager.read(name);
 			} catch (IOException e) {
 				// Removes the lock in case of reading error.
 				locks.remove(name);
+				saveMetadata();
 				throw new RemoteException("Cannot read the requested file.");
 			}
 		return new LockResponse(name, true, credentials.getLogin(), content);
@@ -157,10 +178,12 @@ public class FileServer implements FileServerInterface {
 		} catch (IOException e) {
 			// Releases the lock in case of writing error.
 			locks.remove(name);
+			saveMetadata();
 			throw new RemoteException("Unable to write the provided file.");
 		}
 		// Releases the lock.
 		locks.remove(name);
+		saveMetadata();
 		return new PushResponse(name, true);
 	}
 	
@@ -175,6 +198,21 @@ public class FileServer implements FileServerInterface {
 	private boolean verifyCredentials(Credentials credentials) throws RemoteException {
 		if(credentials == null) return false;
 		return this.authenticationServer.verify(credentials.getLogin(), credentials.getPassword());
+	}
+	
+	/**
+	 * Saves the metadata of the server. This should be called at every
+	 * lock taken so that it is still valid even after server crash.
+	 */
+	private void saveMetadata() {
+		try {
+			FileManager fm = new FileManager();
+			fm.write(METADATA_FILE, locks);
+		} catch (IOException e) {
+			System.err.println("Cannot save file server metadata.");
+			e.printStackTrace();
+			// Do not exit, the file server can still use its in memory locks.
+		}
 	}
 	
 	/**
