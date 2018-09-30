@@ -84,9 +84,9 @@ public class FileServer implements FileServerInterface {
 		try {
 			if(!fileManager.exists(fileManager.buildFilePath(name)))
 				if(fileManager.create(name)) {
-					return new CreateResponse(name);
+					return new CreateResponse(name, true);
 				}
-			return null;
+			return new CreateResponse(name, false);
 		}
 		catch (IOException e) {
 			throw new RemoteException("Cannot create requested file");

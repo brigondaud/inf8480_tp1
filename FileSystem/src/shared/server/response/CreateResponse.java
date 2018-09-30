@@ -11,12 +11,16 @@ public class CreateResponse extends Response {
 	
 	private String fileCreated;
 	
-	public CreateResponse(String fileCreated) {
+	private boolean success;
+	
+	public CreateResponse(String fileCreated, boolean success) {
 		this.fileCreated = fileCreated;
+		this.success = success;
 	}
 
 	@Override
 	public String toString() {
+		if(!success) return "Le fichier " + fileCreated + " existe déjà";
 		return "fichier " + this.fileCreated + " ajoutÃ©";
 	}
 

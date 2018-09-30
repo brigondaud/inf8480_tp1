@@ -1,5 +1,10 @@
 package shared.server.response;
 
+import java.io.File;
+import java.io.IOException;
+
+import shared.files.FileManager;
+
 /**
  * A response to the get command. Sends the content of
  * a file if the version on the file system is more recent
@@ -24,7 +29,13 @@ public class GetResponse extends Response {
 	 */
 	@Override
 	protected void onReception() {
-		// TODO
+		try {
+			FileManager fm = new FileManager();
+			fm.write(fileName, content);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	@Override
