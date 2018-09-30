@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -144,7 +145,12 @@ public class FileManagerTest {
 			fileManager.create(name);
 		}
 		String[] filesFound = fileManager.list();
-		assertArrayEquals(files, filesFound);
+		// Comparing the length and searching manually because the files
+		// may not be in the same position in the two files array.
+		assertEquals(files.length, filesFound.length);
+		for(String fileFound: filesFound) {
+			assertTrue(Arrays.asList(files).contains(fileFound));
+		}
 		for(String name: files) {
 			File file = new File(fileManager.buildFilePath(name));
 			file.delete();
