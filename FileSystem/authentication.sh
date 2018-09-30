@@ -20,9 +20,9 @@ if [ -z "$1" ]
     IPADDR="127.0.0.1"
 fi
 
-# Launch the file server
-java -cp "$basepath"/file_server.jar:"$basepath"/shared.jar \
+# Launch the authentication server
+java -cp "$basepath"/auth.jar:"$basepath"/shared.jar \
   -Djava.rmi.server.codebase=file:"$basepath"/shared.jar \
   -Djava.security.policy="$basepath"/policy \
   -Djava.rmi.server.hostname="$IPADDR" \
-  server.FileServer
+  auth.Authentication
