@@ -1,24 +1,43 @@
 package shared.server.response;
 
+import shared.auth.Credentials;
+
+import java.io.IOException;
+
 public class NewResponse extends Response {
 
-    private String login;
+    private Credentials credentials;
 
     private boolean success;
 
-    public NewResponse(String login, boolean success) {
+    public NewResponse(Credentials credentials, boolean success) {
         super();
-        this.login = login;
+        this.credentials = credentials;
         this.success = success;
+    }
+
+    @Override
+    public void onReception() {
+        if (this.success) {
+            String execDir = System.getProperty("user.dir");
+            try {
+                this.fileManager.setWorkingDirectory(execDir);
+                // The entries need to be serialized on every update
+                this.fileManager.write(".credentials", credentials);
+            } catch (IOException ioException) {
+                System.err.println("I/O exception happened during write operation");
+                ioException.printStackTrace();
+            }
+        }
     }
 
     @Override
     public String toString() {
         if (this.success) {
 
-            return  "Utilisateur " + this.login + " enregistré.";
+            return  "Utilisateur " + this.credentials.getLogin() + " enregistré.";
         } else {
-            return "Echec lors de l'enregistrement de l'utilisateur " + this.login;
+            return "Echec lors de l'enregistrement de l'utilisateur " + this.credentials.getLogin();
         }
     }
 

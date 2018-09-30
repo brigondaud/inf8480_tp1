@@ -1,6 +1,7 @@
 package auth;
 
 import shared.auth.AuthenticationInterface;
+import shared.auth.Credentials;
 import shared.files.FileManager;
 import shared.server.response.NewResponse;
 import shared.server.response.Response;
@@ -44,20 +45,12 @@ public class Authentication implements AuthenticationInterface {
 
     @Override
     public Response newUser(String login, String password) {
+        Credentials credentials = new Credentials(login, password);
         if (this.usersEntry.containsKey(login)) {
-            return new NewResponse(login, false);
+            return new NewResponse(credentials, false);
         } else {
             usersEntry.put(login, password);
-            // The entries need to be serialized on every update
-            try {
-                String execDir = System.getProperty("user.dir");
-                FileManager fileManager = new FileManager();
-                fileManager.setWorkingDirectory(execDir + RECOVERY_FILE_PATH);
-                fileManager.write(RECOVERY_FILE_NAME, this.usersEntry);
-            } catch (IOException ioe) {
-                // TODO Manage the exception
-            }
-            return new NewResponse(login, true);
+            return new NewResponse(credentials, true);
         }
     }
 

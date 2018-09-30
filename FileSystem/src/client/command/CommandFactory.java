@@ -33,10 +33,7 @@ public class CommandFactory {
         System.out.println("Command name : " + args[Client.commandIndex]);
         String commandName = args[Client.commandIndex];
         FileManager fileManager = new FileManager();
-        Credentials credentials = fileManager.retrieveUserCredentials("credentials");
-        if (credentials == null && !commandName.equals("new")) {
-            // TODO create an other exception for this
-        }
+        Credentials credentials = fileManager.retrieveUserCredentials(".credentials");
         // Do the parsing on command name
         switch (commandName) {
             case "create":

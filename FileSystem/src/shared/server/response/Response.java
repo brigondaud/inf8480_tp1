@@ -1,6 +1,7 @@
 package shared.server.response;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import server.FileServer;
 import shared.files.FileManager;
@@ -13,7 +14,7 @@ import shared.files.FileManager;
  * @author Loic Poncet & Baptiste Rigondaud
  *
  */
-public abstract class Response {
+public abstract class Response implements Serializable {
 	
 	/**
 	 * Some responses need a file manager to write files
