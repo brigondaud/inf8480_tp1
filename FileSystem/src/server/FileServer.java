@@ -171,7 +171,7 @@ public class FileServer implements FileServerInterface {
 	public Response push(Credentials credentials, String name, String content) throws RemoteException {
 		if(!verifyCredentials(credentials)) return new BadCredentialsResponse();
 		if(!fileManager.exists(name)) return new NotExistingFileResponse();
-		if(!locks.get(name).equals(credentials))
+		if(!credentials.equals(locks.get(name)))
 			return new PushResponse(name, false);
 		try {
 			fileManager.write(name, content);
