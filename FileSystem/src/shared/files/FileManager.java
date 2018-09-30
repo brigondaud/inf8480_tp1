@@ -30,6 +30,8 @@ public class FileManager {
 	 */
 	public static final String SERVER_FILES_PATH = "serverFiles";
 	
+	public static final String AUTH_FILES_PATH = "authFiles";
+	
 	/**
 	 * Used to set the directory on which the file manager will operate.
 	 */
@@ -251,6 +253,26 @@ public class FileManager {
 			return fm;
 		} catch (IOException e) {
 			System.err.println("Cannot create server ready file manager.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return null;
+	}
+	
+	/**
+	 * Creates a file manager ready to operate on the auth side file system.
+	 * 
+	 * @return An auth side file manager.
+	 */
+	public static FileManager createAuthenticationManager() {
+		try {
+			FileManager fm = new FileManager();
+			fm.setWorkingDirectory(System.getProperty("user.dir") 
+					+ System.getProperty("file.separator") 
+					+ FileManager.AUTH_FILES_PATH);
+			return fm;
+		} catch (IOException e) {
+			System.err.println("Cannot create auth ready file manager.");
 			e.printStackTrace();
 			System.exit(1);
 		}

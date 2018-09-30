@@ -21,20 +21,15 @@ import java.util.Map;
  */
 public class Authentication implements AuthenticationInterface {
 
-    private static final String RECOVERY_FILE_PATH = "/auth";
-
-    private static final String RECOVERY_FILE_NAME = "recovery";
+    private static final String METADATA_FILE = "auth.metadata";
 
     private Map<String, String> usersEntry;
 
     public Authentication() {
         try {
-            FileManager fileManager = new FileManager();
-            String execDir = System.getProperty("user.dir");
-            fileManager.setWorkingDirectory(execDir + RECOVERY_FILE_PATH);
-            // We need to check if a recovery file already exists
-            if (fileManager.exists(RECOVERY_FILE_NAME)) {
-                this.usersEntry = fileManager.deserializeMap(RECOVERY_FILE_NAME);
+            FileManager fileManager = FileManager.createAuthenticationManager();
+            if (fileManager.exists(METADATA_FILE)) {
+                this.usersEntry = fileManager.deserializeMap(METADATA_FILE);
             } else {
                 this.usersEntry = new HashMap<>();
             }
@@ -44,12 +39,19 @@ public class Authentication implements AuthenticationInterface {
     }
 
     @Override
-    public Response newUser(String login, String password) {
+    public synchronized Response newUser(String login, String password) {
         Credentials credentials = new Credentials(login, password);
         if (this.usersEntry.containsKey(login)) {
             return new NewResponse(credentials, false);
         } else {
             usersEntry.put(login, password);
+            try {
+				FileManager.createAuthenticationManager().write(METADATA_FILE, usersEntry);
+			} catch (IOException e) {
+				System.err.println("Cannot save the credentials data in metadata file.");
+				e.printStackTrace();
+				// Do not exit, the users can still use their in memory credentials.
+			}
             return new NewResponse(credentials, true);
         }
     }
@@ -70,7 +72,6 @@ public class Authentication implements AuthenticationInterface {
         }
         try {
             String name = "Authentication";
-            String hostIp = "132.207.12.87";
             AuthenticationInterface auth = new Authentication();
             AuthenticationInterface stub =
                     (AuthenticationInterface) UnicastRemoteObject.exportObject(auth, 0);
