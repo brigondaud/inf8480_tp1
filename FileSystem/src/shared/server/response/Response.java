@@ -19,7 +19,7 @@ public abstract class Response {
 	 * Some responses need a file manager to write files
 	 * resulting from the command sent.
 	 */
-	private FileManager fileManager;
+	protected FileManager fileManager;
 	
 	public Response() {
 		try {
