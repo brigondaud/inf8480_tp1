@@ -17,5 +17,9 @@ public class InvalidCredentialsException extends RemoteException {
 	public InvalidCredentialsException(Credentials credentials) {
 		super(InvalidCredentialsException.message + credentials.toString());
 	}
+	
+	public InvalidCredentialsException() {
+		super("No credentials were found.");
+	}
 
 }
