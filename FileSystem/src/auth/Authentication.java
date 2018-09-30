@@ -2,6 +2,8 @@ package auth;
 
 import shared.auth.AuthenticationInterface;
 import shared.files.FileManager;
+import shared.server.response.NewResponse;
+import shared.server.response.Response;
 
 import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
@@ -41,9 +43,9 @@ public class Authentication implements AuthenticationInterface {
     }
 
     @Override
-    public boolean newUser(String login, String password) {
+    public Response newUser(String login, String password) {
         if (this.usersEntry.containsKey(login)) {
-            return false;
+            return new NewResponse(login, false);
         } else {
             usersEntry.put(login, password);
             // The entries need to be serialized on every update
@@ -55,7 +57,7 @@ public class Authentication implements AuthenticationInterface {
             } catch (IOException ioe) {
                 // TODO Manage the exception
             }
-            return true;
+            return new NewResponse(login, true);
         }
     }
 

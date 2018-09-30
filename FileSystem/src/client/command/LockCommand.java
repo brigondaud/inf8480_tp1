@@ -3,9 +3,12 @@ package client.command;
 import client.Client;
 import shared.client.InvalidArgumentsException;
 import shared.auth.Credentials;
+import shared.files.FileManager;
+import shared.files.MD5Checksum;
 import shared.server.FileServerInterface;
 import shared.server.response.Response;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class LockCommand extends Command {
@@ -20,12 +23,14 @@ public class LockCommand extends Command {
     }
 
     @Override
-    public Response execute() throws RemoteException, InvalidArgumentsException {
+    public Response execute() throws IOException, InvalidArgumentsException {
         if (this.args.length < 3) {
             throw new InvalidArgumentsException(this.args[Client.commandIndex]);
         }
-        this.server.lock(this.credentials, this.args[2], null);
-        return null; //TODO
+        FileManager fileManager = new FileManager();
+        String fileName = this.args[2];
+        MD5Checksum checksum = fileManager.checksum(fileName);
+        return this.server.lock(this.credentials, fileName, checksum);
     }
 
 }

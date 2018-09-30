@@ -1,5 +1,7 @@
 package shared.auth;
 
+import shared.server.response.Response;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -16,7 +18,7 @@ public interface AuthenticationInterface extends Remote {
      * @param password The password of the user
      * @return true if the operation succeed, false if login was already used by an existing user
      */
-    boolean newUser(String login, String password) throws RemoteException;
+    Response newUser(String login, String password) throws RemoteException;
 
     /**
      * Verify that given credentials are valid
