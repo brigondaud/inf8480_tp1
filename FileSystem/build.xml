@@ -57,7 +57,7 @@
 	</target>
 
 	<target depends="build-jar" name="test">
-		<junit>
+		<junit failureProperty="test.failure" haltonfailure="test.error">
 			<classpath>
 				<path refid="FileSystem.classpath" />
 			</classpath>
