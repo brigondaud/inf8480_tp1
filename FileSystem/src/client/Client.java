@@ -4,6 +4,7 @@ import client.command.Command;
 import client.command.CommandFactory;
 import shared.auth.AuthenticationInterface;
 import shared.client.InvalidCommandException;
+import shared.files.FileManager;
 import shared.server.FileServerInterface;
 import shared.server.response.Response;
 
@@ -36,7 +37,7 @@ public class Client {
             CommandFactory factory = new CommandFactory(fileServer, authServer);
             Command command = factory.createCommand(args);
             Response response = command.execute();
-            System.out.println(response.execute());
+            System.out.println(response.execute(new FileManager()));
         } catch (RemoteException e) {
             System.err.println("Remote exception during RMI call: ");
             e.printStackTrace();

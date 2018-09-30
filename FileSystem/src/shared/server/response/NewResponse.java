@@ -1,6 +1,7 @@
 package shared.server.response;
 
 import shared.auth.Credentials;
+import shared.files.FileManager;
 
 import java.io.IOException;
 
@@ -17,13 +18,13 @@ public class NewResponse extends Response {
     }
 
     @Override
-    public void onReception() {
+    public void onReception(FileManager fileManager) {
         if (this.success) {
             String execDir = System.getProperty("user.dir");
             try {
-                this.fileManager.setWorkingDirectory(execDir);
+                fileManager.setWorkingDirectory(execDir);
                 // The entries need to be serialized on every update
-                this.fileManager.write(".credentials", credentials);
+                fileManager.write(".credentials", credentials);
             } catch (IOException ioException) {
                 System.err.println("I/O exception happened during write operation");
                 ioException.printStackTrace();

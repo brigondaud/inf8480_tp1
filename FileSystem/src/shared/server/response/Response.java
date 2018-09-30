@@ -17,35 +17,20 @@ import shared.files.FileManager;
 public abstract class Response implements Serializable {
 	
 	/**
-	 * Some responses need a file manager to write files
-	 * resulting from the command sent.
-	 */
-	protected FileManager fileManager;
-	
-	public Response() {
-		try {
-			this.fileManager = new FileManager();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-	}
-	
-	/**
 	 * A response is executed at its reception for possible client side
 	 * actions and displaying the results.
 	 * @return
 	 */
-	public String execute() {
+	public String execute(FileManager fileManager) {
 		// Set the working directory to match the client's one.
 		String execDir = System.getProperty("user.dir");
 		try {
-			this.fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileManager.CLIENT_FILES_PATH);
+			fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileManager.CLIENT_FILES_PATH);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		this.onReception();
+		this.onReception(fileManager);
 		return this.toString();
 	}
 	
@@ -53,7 +38,7 @@ public abstract class Response implements Serializable {
 	 * The actions that must be performed on reception.
 	 * Does nothing by default.
 	 */
-	protected void onReception() {
+	protected void onReception(FileManager fileManager) {
 		// Does nothing by default
 	}
 	

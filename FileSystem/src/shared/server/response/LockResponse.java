@@ -2,6 +2,8 @@ package shared.server.response;
 
 import java.io.IOException;
 
+import shared.files.FileManager;
+
 /**
  * A response to the lock command. It sends the success state
  * of the lock, and the user having the lock on the requested file.
@@ -58,12 +60,12 @@ public class LockResponse extends Response {
 	 * if his local copy is not up-to-date.
 	 */
 	@Override
-	protected void onReception() {
+	protected void onReception(FileManager fileManager) {
 		// If the returned content is not null, then the file
 		// is out-of-date: need to write the provided content.
 		if(content == null) return;
 		try {
-			this.fileManager.write(fileName, content);
+			fileManager.write(fileName, content);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);

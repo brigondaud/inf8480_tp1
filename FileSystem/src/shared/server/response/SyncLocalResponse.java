@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import shared.files.FileManager;
+
 /**
  * A response to the syncLocalDirectory command. It receives
  * every files and their content from the file server
@@ -40,10 +42,10 @@ public class SyncLocalResponse extends Response {
 	 * @throws  
 	 */
 	@Override
-	protected void onReception() {
+	protected void onReception(FileManager fileManager) {
 		for(String file: files.keySet()) {
 			try {
-				this.fileManager.write(file, files.get(file));
+				fileManager.write(file, files.get(file));
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.exit(1);

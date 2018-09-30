@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Loic Poncet & Baptiste Rigondaud
  *
  */
-public class FileManager implements Serializable {
+public class FileManager {
 	
 	/**
 	 * The path to the client files.

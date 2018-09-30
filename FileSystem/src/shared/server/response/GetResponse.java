@@ -28,10 +28,10 @@ public class GetResponse extends Response {
 	 * Writes the file to the client file system.
 	 */
 	@Override
-	protected void onReception() {
+	protected void onReception(FileManager fileManager) {
 		if(content == null) return;
 		try {
-			this.fileManager.write(fileName, content);
+			fileManager.write(fileName, content);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
