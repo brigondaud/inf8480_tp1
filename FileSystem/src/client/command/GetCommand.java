@@ -30,8 +30,11 @@ public class GetCommand extends Command {
         }
         String fileName = this.args[2];
         FileManager fileManager = FileManager.createClientManager();
-        if(!fileManager.exists(fileName)) throw new InvalidArgumentsException(fileName);
-        MD5Checksum checksum = fileManager.checksum(fileName);
+        MD5Checksum checksum;
+        if(fileManager.exists(fileName))
+        	checksum = fileManager.checksum(fileName);
+        else
+        	checksum = null;
         return this.server.get(this.credentials, fileName, checksum);
     }
 }
