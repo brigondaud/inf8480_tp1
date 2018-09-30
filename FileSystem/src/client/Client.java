@@ -7,6 +7,7 @@ import shared.client.InvalidCommandException;
 import shared.server.FileServerInterface;
 import shared.server.response.Response;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -41,6 +42,9 @@ public class Client {
             e.printStackTrace();
         } catch (InvalidCommandException icException) {
             printHelp();
+        } catch (IOException ioException) {
+            System.err.println("I/O exception during RMI call");
+            ioException.printStackTrace();
         } catch (Exception e) {
             System.err.println("client exception: ");
             e.printStackTrace();

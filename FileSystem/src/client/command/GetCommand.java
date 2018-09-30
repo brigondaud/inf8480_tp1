@@ -3,10 +3,13 @@ package client.command;
 import client.Client;
 import shared.client.InvalidArgumentsException;
 import shared.auth.Credentials;
+import shared.files.FileManager;
+import shared.files.MD5Checksum;
 import shared.server.FileServerInterface;
 import shared.server.response.Response;
 
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class GetCommand extends Command {
@@ -21,11 +24,13 @@ public class GetCommand extends Command {
     }
 
     @Override
-    public Response execute() throws RemoteException, InvalidArgumentsException {
+    public Response execute() throws IOException, RemoteException, InvalidArgumentsException {
         if (this.args.length < 3) {
             throw new InvalidArgumentsException(this.args[Client.commandIndex]);
         }
         String fileName = this.args[2];
-        return this.server.get(this.credentials, fileName, null);
+        FileManager fileManager = new FileManager();
+        MD5Checksum checksum = fileManager.checksum(fileName);
+        return this.server.get(this.credentials, fileName, checksum);
     }
 }
