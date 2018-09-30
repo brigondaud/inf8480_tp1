@@ -1,5 +1,10 @@
 package shared.server.response;
 
+import java.io.IOException;
+
+import server.FileServer;
+import shared.files.FileManager;
+
 /**
  * A reponse sent by the file server to the client. It is used to factorize
  * the different responses sent by the server. A response can have some tasks
@@ -9,6 +14,19 @@ package shared.server.response;
  *
  */
 public abstract class Response {
+	
+	/**
+	 * Some responses need a file manager to write files
+	 * resulting from the command sent.
+	 */
+	private FileManager fileManager;
+	
+	public Response() throws IOException {
+		this.fileManager = new FileManager();
+		// Set the working directory to match the client's one.
+		String execDir = System.getProperty("user.dir");
+		this.fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileManager.CLIENT_FILES_PATH);
+	}
 	
 	/**
 	 * A response is executed at its reception for possible client side

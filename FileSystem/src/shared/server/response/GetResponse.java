@@ -19,7 +19,8 @@ public class GetResponse extends Response {
 	
 	private byte[] content;
 	
-	public GetResponse(String fileName, byte[] content) {
+	public GetResponse(String fileName, byte[] content) throws IOException {
+		super();
 		this.fileName = fileName;
 		this.content = content;
 	}

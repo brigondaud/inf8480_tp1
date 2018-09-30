@@ -21,6 +21,16 @@ import java.util.Map;
 public class FileManager {
 	
 	/**
+	 * The path to the client files.
+	 */
+	public static final String CLIENT_FILES_PATH = "clientFiles";
+	
+	/**
+	 * The path to the server files.
+	 */
+	public static final String SERVER_FILES_PATH = "serverFiles";
+	
+	/**
 	 * Used to set the directory on which the file manager will operate.
 	 */
 	private Path workingDirectory;
