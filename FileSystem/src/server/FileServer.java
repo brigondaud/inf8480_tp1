@@ -173,6 +173,7 @@ public class FileServer implements FileServerInterface {
 	 * the provided credentials.
 	 */
 	private void verifyCredentials(Credentials credentials) throws RemoteException {
+		if(credentials == null) throw new InvalidCredentialsException(credentials);
 		if(!this.authenticationServer.verify(credentials.getLogin(), credentials.getPassword()))
 			throw new InvalidCredentialsException(credentials);
 	}
