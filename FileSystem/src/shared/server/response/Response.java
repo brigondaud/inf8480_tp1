@@ -21,11 +21,16 @@ public abstract class Response {
 	 */
 	private FileManager fileManager;
 	
-	public Response() throws IOException {
-		this.fileManager = new FileManager();
-		// Set the working directory to match the client's one.
-		String execDir = System.getProperty("user.dir");
-		this.fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileManager.CLIENT_FILES_PATH);
+	public Response() {
+		try {
+			this.fileManager = new FileManager();
+			// Set the working directory to match the client's one.
+			String execDir = System.getProperty("user.dir");
+			this.fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileManager.CLIENT_FILES_PATH);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 	
 	/**

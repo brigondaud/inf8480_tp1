@@ -1,6 +1,5 @@
 package shared.server.response;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class SyncLocalResponse extends Response {
 	 */
 	private Map<String, byte[]> files;
 	
-	public SyncLocalResponse() throws IOException {
+	public SyncLocalResponse() {
 		super();
 		this.files = new HashMap<String, byte[]>();
 	}

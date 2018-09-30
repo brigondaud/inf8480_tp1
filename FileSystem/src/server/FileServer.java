@@ -34,11 +34,6 @@ import shared.server.response.SyncLocalResponse;
 public class FileServer implements FileServerInterface {
 	
 	/**
-	 * The path to the files stored in the file system.
-	 */
-	private static final String FILE_PATH = "files";
-	
-	/**
 	 * A remote reference to the authentication server.
 	 */
 	private AuthenticationInterface authenticationServer;
@@ -68,7 +63,7 @@ public class FileServer implements FileServerInterface {
 	public FileServer() throws IOException, NotBoundException {
 		String execDir = System.getProperty("user.dir");
 		this.fileManager = new FileManager();
-		this.fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileServer.FILE_PATH);
+		this.fileManager.setWorkingDirectory(execDir + System.getProperty("file.separator") + FileManager.SERVER_FILES_PATH);
 
 		this.locks = new HashMap<String, Credentials>();
 		//TODO: load an existing saved lock file in case of server crash.

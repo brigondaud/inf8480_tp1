@@ -2,8 +2,6 @@ package shared.server.response;
 
 import java.io.IOException;
 
-import shared.files.FileManager;
-
 /**
  * A response to the lock command. It sends the success state
  * of the lock, and the user having the lock on the requested file.
@@ -47,7 +45,7 @@ public class LockResponse extends Response {
 	 * @param content The content of the file if the local copy is out-of-date.
 	 * @throws IOException 
 	 */
-	public LockResponse(String fileName, boolean success, String user, byte[] content) throws IOException {
+	public LockResponse(String fileName, boolean success, String user, byte[] content) {
 		super();
 		this.fileName = fileName;
 		this.success = success;

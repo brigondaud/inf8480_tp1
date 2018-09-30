@@ -21,7 +21,7 @@ public class PushResponse extends Response {
 	 * @param fileName The pushed file name.
 	 * @throws IOException 
 	 */
-	public PushResponse(String fileName, boolean success) throws IOException {
+	public PushResponse(String fileName, boolean success) {
 		super();
 		this.fileName = fileName;
 		this.success = success;

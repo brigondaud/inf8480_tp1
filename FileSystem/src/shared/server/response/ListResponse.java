@@ -1,6 +1,6 @@
 package shared.server.response;
 
-import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public class ListResponse extends Response {
 	
 	private Map<String, String> filesLocked;
 	
-	public ListResponse() throws IOException {
+	public ListResponse() {
 		super();
 		this.filesLocked = new HashMap<String, String>();
 	}

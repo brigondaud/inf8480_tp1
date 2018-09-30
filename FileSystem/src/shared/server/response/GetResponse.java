@@ -1,6 +1,5 @@
 package shared.server.response;
 
-import java.io.File;
 import java.io.IOException;
 
 import shared.files.FileManager;
@@ -19,7 +18,7 @@ public class GetResponse extends Response {
 	
 	private byte[] content;
 	
-	public GetResponse(String fileName, byte[] content) throws IOException {
+	public GetResponse(String fileName, byte[] content) {
 		super();
 		this.fileName = fileName;
 		this.content = content;

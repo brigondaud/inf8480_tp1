@@ -1,7 +1,5 @@
 package shared.server.response;
 
-import java.io.IOException;
-
 /**
  * A reponse to the create command. Used just to print a message in
  * case of success.
@@ -15,7 +13,7 @@ public class CreateResponse extends Response {
 	
 	private boolean success;
 	
-	public CreateResponse(String fileCreated, boolean success) throws IOException {
+	public CreateResponse(String fileCreated, boolean success) {
 		super();
 		this.fileCreated = fileCreated;
 		this.success = success;
