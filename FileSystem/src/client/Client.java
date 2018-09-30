@@ -5,6 +5,7 @@ import client.command.CommandFactory;
 import shared.auth.AuthenticationInterface;
 import shared.client.InvalidCommandException;
 import shared.server.FileServerInterface;
+import shared.server.exception.InvalidCredentialsException;
 import shared.server.response.Response;
 
 import java.io.IOException;
@@ -37,6 +38,8 @@ public class Client {
             Command command = factory.createCommand(args);
             Response response = command.execute();
             System.out.println(response.execute());
+        } catch(InvalidCredentialsException e) {
+        	System.err.println("Identifiants invalides.");
         } catch (RemoteException e) {
             System.err.println("Remote exception during RMI call: ");
             e.printStackTrace();
@@ -44,7 +47,7 @@ public class Client {
             printHelp();
         } catch (IOException ioException) {
             System.err.println("I/O exception during RMI call");
-            ioException.printStackTrace();
+            ioException.printStackTrace();	
         } catch (Exception e) {
             System.err.println("client exception: ");
             e.printStackTrace();
