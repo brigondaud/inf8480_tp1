@@ -38,7 +38,7 @@ public class NewResponse extends Response {
 
             return  "Utilisateur " + this.credentials.getLogin() + " enregistré.";
         } else {
-            return "Echec lors de l'enregistrement de l'utilisateur " + this.credentials.getLogin();
+            return "L'utilisateur " + this.credentials.getLogin() + " existe déjà";
         }
     }
 
