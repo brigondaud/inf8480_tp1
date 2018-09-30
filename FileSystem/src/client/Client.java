@@ -40,17 +40,22 @@ public class Client {
             System.out.println(response.execute());
         } catch(InvalidCredentialsException e) {
         	System.err.println("Identifiants invalides.");
+        	System.exit(1);
         } catch (RemoteException e) {
             System.err.println("Remote exception during RMI call: ");
             e.printStackTrace();
+            System.exit(1);
         } catch (InvalidCommandException icException) {
             printHelp();
+            System.exit(1);
         } catch (IOException ioException) {
             System.err.println("I/O exception during RMI call");
-            ioException.printStackTrace();	
+            ioException.printStackTrace();
+            System.exit(1);
         } catch (Exception e) {
             System.err.println("client exception: ");
             e.printStackTrace();
+            System.exit(1);
         }
     }
 
