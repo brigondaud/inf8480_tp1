@@ -24,7 +24,7 @@ ant test
 
 ## Utilisation
 
-Avancer de pouvoir lancer les serveurs, lancer Java RMI:
+Avancer de pouvoir lancer les serveurs, lancer Java RMI à la racine du projet en éxecutant:
 ```
 registry -J-Djava.rmi.server.codebase=file:shared.jar &
 ```
