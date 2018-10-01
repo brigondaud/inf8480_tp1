@@ -78,7 +78,7 @@ public class LockResponse extends Response {
 	@Override
 	public String toString() {
 		if(success) return fileName + " verrouillé.";
-		return fileName + "est déjà vérouillé par " + user;
+		return fileName + " est déjà vérouillé par " + user;
 	}
 
 }
